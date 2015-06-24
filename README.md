@@ -1,4 +1,4 @@
-# npm-gulpfile
+# polygulp
 
 > Indirect gulpfile for Polymer applications.
 
@@ -8,7 +8,7 @@
 If you haven't used [Gulp](http://gulpjs.com/) before, be sure to check out the [Getting Started](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) guide and how to use Gulp plugins. Once you're familiar with that process, you may install this plugin with this command:
 
 ```shell
-npm install npm-gulpfile --save-dev
+npm install polygulp --save-dev
 ```
 
 Once the plugin has been installed, it may be enabled inside your Gulpfile with this line of JavaScript:
@@ -19,7 +19,7 @@ module.exports = function(gulp) {
     // Init main modular gulpfile
     var gulp = require('gulp');
 
-    require('npm-gulpfile')(gulp);
+    require('polygulp')(gulp);
 
 };
 ```
