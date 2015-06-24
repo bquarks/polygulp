@@ -11,10 +11,10 @@ If you haven't used [Gulp](http://gulpjs.com/) before, be sure to check out the 
 npm install npm-gulpfile --save-dev
 ```
 
-Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
+Once the plugin has been installed, it may be enabled inside your Gulpfile with this line of JavaScript:
 
 ```js
-module.exports = function(grunt) {
+module.exports = function(gulp) {
 
     // Init main modular gulpfile
     var gulp = require('gulp');
@@ -31,7 +31,7 @@ module.exports = function(grunt) {
 Runs server for development.
 
 #### grunt release
-Bumps bower & package version, commits files changed and creates a new tag with the specified version.
+Bumps bower & package version, commits changed files and creates a new tag with the specified version.
 
 task                        | version
 ----------------------------|-----------------
