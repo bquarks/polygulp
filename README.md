@@ -27,10 +27,10 @@ module.exports = function(gulp) {
 
 ## Usage
 
-#### grunt serve
+#### gulp serve
 Runs server for development.
 
-#### grunt release
+#### gulp release
 Bumps bower & package version, commits changed files and creates a new tag with the specified version.
 
 task                        | version
