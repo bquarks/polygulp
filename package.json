@@ -1,20 +1,21 @@
 {
-    "name": "npm-gulpfile",
+    "name": "polygulp",
     "version": "0.0.0",
     "description": "Indirect Gulpfile for Polymer projects",
     "main": "gulpfile.js",
     "repository": {
         "type": "git",
-        "url": "git@github.com:bquarks/npm-gulpfile.git"
+        "url": "git@github.com:bquarks/polygulp.git"
     },
     "scripts": {
-        "test": "gulp test:local"
+        "test": "echo Error: no test specified && exit 1"
     },
     "keywords": [
         "bq",
         "bquarks",
         "gulp",
         "gulpfile",
+        "polygulp",
         "polymer"
     ],
     "authors": [
