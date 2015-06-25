@@ -40,4 +40,19 @@ gulp release --minor        | v0.0.1 -> v0.1.0
 gulp release --major        | v0.0.1 -> v1.0.1
 gulp release --version 1.1.1| v0.0.1 -> v1.1.1
 
+#### gulp test
+Runs tests
+ once and exit with [Karma](https://github.com/karma-runner/karma).
+
+#### gulp tdd
+Watchs for file changes and re-run tests on each change.
+
+#### gulp nightwatch
+Runs selenium tests with the [Nightwatch's Command-line options](http://nightwatchjs.org/guide#command-line-options).
+
+Example:
+```js
+gulp nightwatch --env chrome
+```
+
 Task targets, files and options may be specified according to the gulp [Recipes](https://github.com/gulpjs/gulp/tree/master/docs/recipes) guide.
