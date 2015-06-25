@@ -19,7 +19,13 @@ module.exports = function(gulp, config) {
             .pipe($.jshint.reporter('jshint-stylish'));
     });
 
-    gulp.task('serve', ['jshint', 'styles'], function() {
+    gulp.task('svgsprite', function() {
+        return gulp.src(config.PATHS.src + '/assets/svg/sprite/*.svg')
+            .pipe($.svgstore())
+            .pipe(gulp.dest(config.PATHS.src + '/assets/svg/sprite'));
+    });
+
+    gulp.task('serve', ['jshint', 'styles', 'svgsprite'], function() {
 
         browserSync({
             notify: false,
@@ -34,6 +40,7 @@ module.exports = function(gulp, config) {
         gulp.watch([config.PATHS.src + '/**/*.html'], reload);
         gulp.watch([config.PATHS.src + '/**/*.js'], ['jshint', reload]);
         gulp.watch([config.PATHS.src + '/**/*.css'], ['styles', reload]);
+        gulp.watch([config.PATHS.src + '/assets/svg/sprite/*.svg'], ['svgsprite', reload]);
 
     });
 
