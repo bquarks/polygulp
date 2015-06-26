@@ -7,7 +7,8 @@ module.exports = function(gulp) {
     var config = {
         PATHS: {
             src: 'app',
-            dist: 'dist'
+            dist: 'dist',
+            test: 'test'
 
         },
         AUTOPREFIXER_BROWSERS: [
@@ -24,8 +25,8 @@ module.exports = function(gulp) {
     };
 
     // Load tasks
-    require('./tasks/testing')(gulp);
     require('./tasks/release')(gulp);
+    require('./tasks/testing')(gulp, config);
     require('./tasks/server')(gulp, config);
     require('./tasks/dist')(gulp, config);
 };

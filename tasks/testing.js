@@ -2,7 +2,7 @@
 
 /* global module, require */
 
-module.exports = function(gulp) {
+module.exports = function(gulp, config) {
 
     var nightwatch = require('gulp-nightwatch');
     var karma = require('karma').server;
@@ -29,7 +29,7 @@ module.exports = function(gulp) {
      */
     gulp.task('test', function(done) {
         karma.start({
-            configFile: 'test/karma.conf.js',
+            configFile: config.PATHS.test + '/karma/karma.conf.js',
             singleRun: true
         }, done);
     });
@@ -39,17 +39,17 @@ module.exports = function(gulp) {
      */
     gulp.task('tdd', function(done) {
         karma.start({
-            configFile: 'test/karma.conf.js'
+            configFile: config.PATHS.test + '/karma/karma.conf.js'
         }, done);
     });
 
     /**
      * Run selenium test with command line options (optional)
      */
-    gulp.task('nightwatch', function() {
+    gulp.task('selenium', function() {
         gulp.src('')
             .pipe(nightwatch({
-                configFile: 'test/nightwatch.json',
+                configFile: config.PATHS.test + '/nightwatch/nightwatch.json',
                 cliArgs: my.commandLine()
             }));
     });
