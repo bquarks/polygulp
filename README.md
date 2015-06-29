@@ -47,12 +47,17 @@ Runs tests
 #### gulp tdd
 Watchs for file changes and re-run tests on each change.
 
-#### gulp nightwatch
-Runs selenium tests with the [Nightwatch's Command-line options](http://nightwatchjs.org/guide#command-line-options).
+#### gulp selenium
+Runs selenium tests throughout [Nightwatch](http://nightwatchjs.org/), using the [Nightwatch's Command-line options](http://nightwatchjs.org/guide#command-line-options).
 
-Example:
+Example Phantom:
 ```js
-gulp nightwatch --env chrome
+gulp selenium
+```
+
+Example Chrome:
+```js
+gulp selenium --env chrome
 ```
 
 Task targets, files and options may be specified according to the gulp [Recipes](https://github.com/gulpjs/gulp/tree/master/docs/recipes) guide.
