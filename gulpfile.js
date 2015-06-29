@@ -25,6 +25,8 @@ module.exports = function(gulp) {
     };
 
     // Load tasks
+    require('./tasks/default')(gulp, config);
+    require('./tasks/deploy')(gulp, config);
     require('./tasks/release')(gulp);
     require('./tasks/testing')(gulp, config);
     require('./tasks/server')(gulp, config);

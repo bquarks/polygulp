@@ -13,12 +13,6 @@ module.exports = function(gulp, config) {
             .pipe($.autoprefixer(config.AUTOPREFIXER_BROWSERS));
     });
 
-    gulp.task('jshint', function() {
-        return gulp.src(config.PATHS.src + '/**/*.js')
-            .pipe($.jshint())
-            .pipe($.jshint.reporter('jshint-stylish'));
-    });
-
     gulp.task('svgsprite', function() {
         return gulp.src(config.PATHS.src + '/assets/svg/sprite/*.svg')
             .pipe($.svgstore())
@@ -42,6 +36,18 @@ module.exports = function(gulp, config) {
         gulp.watch([config.PATHS.src + '/**/*.css'], ['styles', reload]);
         gulp.watch([config.PATHS.src + '/assets/svg/sprite/*.svg'], ['svgsprite', reload]);
 
+    });
+
+    gulp.task('serve:dist', ['dist'], function() {
+        browserSync({
+            notify: false,
+            server: {
+                baseDir: config.PATHS.dist,
+                routes: {
+                    '/bower_components': 'bower_components'
+                }
+            }
+        });
     });
 
 };
