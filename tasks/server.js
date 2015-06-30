@@ -5,6 +5,7 @@
 var $ = require('gulp-load-plugins')();
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
+var del = require('del');
 
 module.exports = function(gulp, config) {
 
@@ -14,6 +15,7 @@ module.exports = function(gulp, config) {
     });
 
     gulp.task('svgsprite', function() {
+        del.sync(config.PATHS.src + '/assets/svg/sprite/sprite.svg');
         return gulp.src(config.PATHS.src + '/assets/svg/sprite/*.svg')
             .pipe($.svgstore())
             .pipe(gulp.dest(config.PATHS.src + '/assets/svg/sprite'));
