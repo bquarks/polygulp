@@ -8,6 +8,7 @@ module.exports = function(gulp, config) {
     var karma = require('karma').server;
     var argv = require('yargs').argv;
     var _ = require('underscore');
+    var path = require('path');
 
     var my = {
 
