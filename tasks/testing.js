@@ -36,6 +36,17 @@ module.exports = function(gulp, config) {
     });
 
     /**
+     * Run test for CI once and exit
+     */
+    gulp.task('test:ci', function(done) {
+        karma.start({
+            configFile: path.resolve(config.PATHS.test + '/karma/karma.conf.js'),
+            singleRun: true,
+            browsers: ['PhantomJS']
+        }, done);
+    });
+
+    /**
      * Watch for file changes and re-run tests on each change
      */
     gulp.task('tdd', function(done) {
