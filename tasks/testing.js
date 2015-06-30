@@ -29,7 +29,7 @@ module.exports = function(gulp, config) {
      */
     gulp.task('test', function(done) {
         karma.start({
-            configFile: config.PATHS.test + '/karma/karma.conf.js',
+            configFile: path.resolve(config.PATHS.test + '/karma/karma.conf.js'),
             singleRun: true
         }, done);
     });
@@ -39,7 +39,7 @@ module.exports = function(gulp, config) {
      */
     gulp.task('tdd', function(done) {
         karma.start({
-            configFile: config.PATHS.test + '/karma/karma.conf.js'
+            configFile: path.resolve(config.PATHS.test + '/karma/karma.conf.js')
         }, done);
     });
 
@@ -49,7 +49,7 @@ module.exports = function(gulp, config) {
     gulp.task('selenium', function() {
         gulp.src('')
             .pipe(nightwatch({
-                configFile: config.PATHS.test + '/nightwatch/nightwatch.json',
+                configFile: path.resolve(config.PATHS.test + '/nightwatch/nightwatch.json'),
                 cliArgs: my.commandLine()
             }));
     });
