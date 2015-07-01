@@ -14,20 +14,21 @@ module.exports = function(gulp, config) {
 
         var publisher = $.awspublish.create({
             params: {
-                Bucket: bucket,
-                region: 'eu-west-1'
-            }
+                Bucket: bucket
+            },
+            region: 'eu-west-1'
         });
 
         var headers = {
             'Cache-Control': 'max-age=2592000'
         };
 
-        return gulp.src(config.PATHS.dist + '/**/*')
+        return gulp.src(config.PATHS.dist + '/**/*.*')
             .pipe($.awspublish.gzip({
-                ext: '.gz'
+                ext: ''
             }))
             .pipe(publisher.publish(headers))
+            .pipe(publisher.sync())
             .pipe(publisher.cache())
             .pipe($.awspublish.reporter());
 

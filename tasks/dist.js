@@ -4,6 +4,7 @@
 
 var $ = require('gulp-load-plugins')();
 var del = require('del');
+var merge = require('merge-stream');
 
 module.exports = function(gulp, config) {
 
@@ -36,13 +37,17 @@ module.exports = function(gulp, config) {
 
         var svg = $.svgmin().pipe($.svgstore()).pipe(gulp.dest(config.PATHS.dist + '/assets/svg/sprite'));
         var index = $.htmlmin(options.htmlmin);
+        
+        var bower = gulp.src('bower_components/**/*.*').pipe(gulp.dest(config.PATHS.dist + '/bower_components'));
 
-        return gulp.src(config.PATHS.src + '/**/*')
+        var src = gulp.src(config.PATHS.src + '/**/*')
             .pipe($.if(/.*\.(?:jpg|gif|png|bmp)$/, $.imagemin(options.imagemin)))
             .pipe($.if('*.svg', svg))
             .pipe($.if('*.css', $.autoprefixer(config.AUTOPREFIXER_BROWSERS)))
             // .pipe($.if(/(?:elements|pages)\/.+\/.+\.html/, $.vulcanize(options.vulcanize)))
             .pipe($.if(/index\.html/, index))
             .pipe(gulp.dest(config.PATHS.dist));
+
+            return merge(src, bower);
     });
 };
