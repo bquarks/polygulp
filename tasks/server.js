@@ -11,7 +11,8 @@ module.exports = function(gulp, config) {
 
     gulp.task('styles', function() {
         return gulp.src(config.PATHS.src + '/**/*.css')
-            .pipe($.autoprefixer(config.AUTOPREFIXER_BROWSERS));
+            .pipe($.autoprefixer(config.AUTOPREFIXER_BROWSERS))
+            .pipe(gulp.dest(config.PATHS.src));
     });
 
     gulp.task('svgsprite', function() {
