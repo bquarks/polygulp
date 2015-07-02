@@ -33,7 +33,7 @@ Runs server for development.
 #### gulp serve:dist
 Runs server displaying optimized application for production.
 
-### gulp dist
+#### gulp dist
 Generates optimized application for production in `dist` folder.
 
 #### gulp release
