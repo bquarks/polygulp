@@ -6,6 +6,7 @@ var $ = require('gulp-load-plugins')();
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var del = require('del');
+var historyApiFallback = require('connect-history-api-fallback');
 
 module.exports = function(gulp, config) {
 
@@ -13,6 +14,7 @@ module.exports = function(gulp, config) {
     var bsConfig = {
         notify: false,
         server: {
+            middleware: [historyApiFallback()],
             baseDir: config.PATHS.dist,
             routes: {
                 '/bower_components': 'bower_components'
