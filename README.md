@@ -30,8 +30,14 @@ module.exports = function(gulp) {
 #### gulp serve
 Runs server for development.
 
+#### gulp serve:dist
+Runs server displaying optimized application for production.
+
+### gulp dist
+Generates optimized application for production in `dist` folder.
+
 #### gulp release
-Bumps bower & package version, commits changed files and creates a new tag with the specified version.
+Bumps bower & npm version, commits changed files and creates a new tag with the specified version.
 
 task                        | version
 ----------------------------|-----------------
@@ -43,6 +49,9 @@ gulp release --version 1.1.1| v0.0.1 -> v1.1.1
 #### gulp test
 Runs tests
  once and exit with [Karma](https://github.com/karma-runner/karma).
+
+#### gulp test:ci
+Same as `gulp test`, but using PhantomJS browser, suitable for CI servers.
 
 #### gulp tdd
 Watchs for file changes and re-run tests on each change.
