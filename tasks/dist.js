@@ -8,11 +8,7 @@ var merge = require('merge-stream');
 
 module.exports = function(gulp, config) {
 
-    gulp.task('clean:dist', function(cb) {
-        del(config.PATHS.dist, cb);
-    });
-
-    gulp.task('dist', ['clean:dist', 'jshint', 'styles'], function() {
+    gulp.task('dist', ['jshint'], function() {
 
         var options = {
             imagemin: {
@@ -37,16 +33,20 @@ module.exports = function(gulp, config) {
 
         var svg = $.svgmin().pipe($.svgstore()).pipe(gulp.dest(config.PATHS.dist + '/assets/svg/sprite'));
         var index = $.htmlmin(options.htmlmin);
-        
+        var styles = $.postcss(config.postcssProcessors);
+
         var bower = gulp.src('bower_components/**/*.*').pipe(gulp.dest(config.PATHS.dist + '/bower_components'));
 
         var src = gulp.src(config.PATHS.src + '/**/*')
             .pipe($.if(/.*\.(?:jpg|gif|png|bmp)$/, $.imagemin(options.imagemin)))
             .pipe($.if('*.svg', svg))
-            .pipe($.if('*.css', $.autoprefixer(config.AUTOPREFIXER_BROWSERS)))
+            .pipe($.if('*.css', styles))
             // .pipe($.if(/(?:elements|pages)\/.+\/.+\.html/, $.vulcanize(options.vulcanize)))
             .pipe($.if(/index\.html/, index))
             .pipe(gulp.dest(config.PATHS.dist));
+
+            // Deletes dist path
+            del.sync(config.PATHS.dist);
 
             return merge(src, bower);
     });
