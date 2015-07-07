@@ -41,4 +41,5 @@ module.exports = function(gulp) {
     require('./tasks/testing')(gulp, config);
     require('./tasks/server')(gulp, config);
     require('./tasks/dist')(gulp, config);
+    require('./tasks/translate')(gulp, config);
 };

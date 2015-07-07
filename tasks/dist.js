@@ -8,7 +8,7 @@ var merge = require('merge-stream');
 
 module.exports = function(gulp, config) {
 
-    gulp.task('dist', ['jshint'], function() {
+    gulp.task('dist', ['jshint', 'translate'], function() {
 
         var options = {
             imagemin: {

@@ -72,6 +72,7 @@ module.exports = function(gulp, config) {
 
         return runSequence(
             'js',
+            'translate',
             'styles',
             'html',
             'json',
