@@ -60,6 +60,7 @@ module.exports = function(gulp, config) {
 
     gulp.task('serve', ['jshint'], function() {
 
+        del.sync(config.PATHS.dist);
         server();
 
         gulp.watch([config.PATHS.src + '/**/*.html'], reload);
