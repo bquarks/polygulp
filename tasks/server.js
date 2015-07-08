@@ -41,9 +41,9 @@ module.exports = function(gulp, config) {
             .pipe(gulp.dest(config.PATHS.dist));
     });
 
-    gulp.task('json', function() {
-        return gulp.src(config.PATHS.src + '/**/*.json')
-            .pipe(gulp.dest(config.PATHS.dist));
+    gulp.task('config', function() {
+        return gulp.src(config.PATHS.src + '/resources/config/**/*.json')
+            .pipe(gulp.dest(config.PATHS.dist + '/resources/config'));
     });
 
     gulp.task('img', function() {
@@ -67,7 +67,6 @@ module.exports = function(gulp, config) {
         gulp.watch([config.PATHS.src + '/**/*.js'], ['jshint', 'js', reload]);
         gulp.watch([config.PATHS.src + '/**/*.css'], ['styles', reload]);
         gulp.watch([config.PATHS.src + '/**/*.html'], ['html', reload]);
-        gulp.watch([config.PATHS.src + '/**/*.json'], ['json', reload]);
         gulp.watch([config.PATHS.src + '/**/*.{png,jpg,gif,svg}'], ['img', reload]);
         gulp.watch([config.PATHS.src + '/assets/svg/sprite/*.svg'], ['svgsprite', reload]);
 
@@ -76,7 +75,7 @@ module.exports = function(gulp, config) {
             'translate',
             'styles',
             'html',
-            'json',
+            'config',
             'img',
             'svgsprite'
         );

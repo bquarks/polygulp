@@ -8,7 +8,9 @@ var merge = require('merge-stream');
 
 module.exports = function(gulp, config) {
 
-    gulp.task('dist', ['jshint', 'translate'], function() {
+    var runSequence = require('run-sequence').use(gulp);
+
+    gulp.task('_src', function() {
 
         var options = {
             imagemin: {
@@ -49,5 +51,13 @@ module.exports = function(gulp, config) {
             del.sync(config.PATHS.dist);
 
             return merge(src, bower);
+    });
+
+    gulp.task('dist', function() {
+        return runSequence(
+            'jshint',
+            '_src',
+            'translate'
+        );
     });
 };

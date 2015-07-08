@@ -18,19 +18,26 @@ module.exports = function(gulp, config) {
         '}}': '__'
     };
 
-    var replaceChars = function(file) {
+    var replaceChars = function(term) {
         _.each(chars, function(value, key) {
-            file = file.replace(new RegExp(key, 'g'), value);
+            term = term.replace(new RegExp(key, 'g'), value);
         });
-        return file;
+        return term;
     };
 
     var parseLang = function(terms) {
         var parsedTerms = {};
         _.each(terms, function(term) {
-            parsedTerms[term.term] = term.definition;
+            term.term =  replaceChars(term.term);
+            parsedTerms[term.term] = {
+                description: "",
+                message: term.definition
+            };
             if (term.term_plural !== '') {
-                parsedTerms[term.term + '_plural'] = term.term_plural;
+                parsedTerms[term.term + '_plural'] = {
+                    description: "",
+                    message: term.term_plural
+                };
             }
         });
         return parsedTerms;
@@ -44,7 +51,7 @@ module.exports = function(gulp, config) {
         var json;
         initDirs();
         _.each(translations, function(lang, name) {
-            json = replaceChars(JSON.stringify(parseLang(lang)));
+            json = JSON.stringify(parseLang(lang));
             fs.writeFile(localesDir + '/' + name + '.json', json);
         });
     });
