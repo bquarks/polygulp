@@ -10,7 +10,7 @@ module.exports = function(gulp, config) {
 
     var runSequence = require('run-sequence').use(gulp);
 
-    gulp.task('_src', function() {
+    gulp.task('src', function() {
 
         var options = {
             imagemin: {
@@ -55,11 +55,5 @@ module.exports = function(gulp, config) {
             return merge(src, bower);
     });
 
-    gulp.task('dist', function() {
-        return runSequence(
-            'jshint',
-            '_src',
-            'translate'
-        );
-    });
+    gulp.task('dist', ['jshint', 'src', 'translate']);
 };
