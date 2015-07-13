@@ -45,4 +45,6 @@ module.exports = function(gulp, appSettings) {
     require('./tasks/server')(gulp, config);
     require('./tasks/dist')(gulp, config);
     require('./tasks/translate')(gulp, config);
+
+    return config;
 };
