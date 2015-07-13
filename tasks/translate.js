@@ -11,7 +11,7 @@ var mkdirp = require('mkdirp');
 
 module.exports = function(gulp, config) {
 
-    var translations = requireDir(path.resolve('bower_components/translations/clients/web'));
+    var translations = requireDir(path.resolve(config.PATHS.translations));
     var localesDir = path.resolve(config.PATHS.dist + '/resources/locales');
     var chars = {
         '{{': '__',

@@ -5,15 +5,15 @@
 var customMedia = require("postcss-custom-media");
 var nested = require('postcss-nested');
 var autoprefixer = require('autoprefixer');
+var extend = require('deep-extend');
 
-module.exports = function(gulp) {
+module.exports = function(gulp, appSettings) {
 
-    var config = {
+    var defaults = {
         PATHS: {
             src: 'app',
             dist: 'dist',
             test: 'test'
-
         },
         postcssProcessors: [
             customMedia,
@@ -33,6 +33,9 @@ module.exports = function(gulp) {
             })
         ]
     };
+
+    // Merge user settings with default config
+    var config = extend({}, defaults, appSettings);
 
     // Load tasks
     require('./tasks/default')(gulp, config);
