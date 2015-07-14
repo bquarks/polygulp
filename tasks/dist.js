@@ -9,51 +9,66 @@ var merge = require('merge-stream');
 module.exports = function(gulp, config) {
 
     var runSequence = require('run-sequence').use(gulp);
+    var options = {
+        imagemin: {
+            progressive: true
+        },
+        vulcanize: {
+            dest: config.PATHS.dist,
+            strip: true,
+            inlineCss: true,
+            inlineScripts: true
+        },
+        htmlmin: {
+            removeComments: true,
+            collapseWhitespace: true,
+            conservativeCollapse: true,
+            collapseBooleanAttributes: true,
+            removeAttributeQuotes: true,
+            removeEmptyAttributes: true,
+            customAttrAssign: [/\?=/, /\$=/]
+        }
+    };
 
-    gulp.task('src', function() {
-
-        var options = {
-            imagemin: {
-                progressive: true
-            },
-            vulcanize: {
-                dest: config.PATHS.dist,
-                strip: true,
-                inlineCss: true,
-                inlineScripts: true
-            },
-            htmlmin: {
-                removeComments: true,
-                collapseWhitespace: true,
-                conservativeCollapse: true,
-                collapseBooleanAttributes: true,
-                removeAttributeQuotes: true,
-                removeEmptyAttributes: true,
-                customAttrAssign: [/\?=/, /\$=/]
-            }
-        };
-
-        var svg = $.svgmin().pipe($.svgstore()).pipe(gulp.dest(config.PATHS.dist + '/assets/svg/sprite'));
-        var index = $.htmlmin(options.htmlmin);
-        var styles = $.postcss(config.postcssProcessors);
-        var js = $.stripDebug();
-
-        var bower = gulp.src('bower_components/**/*.*').pipe(gulp.dest(config.PATHS.dist + '/bower_components'));
-
-        var src = gulp.src(config.PATHS.src + '/**/*')
-            .pipe($.if(/.*\.(?:jpg|gif|png|bmp)$/, $.imagemin(options.imagemin)))
-            .pipe($.if('*.svg', svg))
-            .pipe($.if('*.css', styles))
-            .pipe($.if('*.js', js))
-            // .pipe($.if(/(?:elements|pages)\/.+\/.+\.html/, $.vulcanize(options.vulcanize)))
-            .pipe($.if(/index\.html/, index))
+    gulp.task('_dist:img', function() {
+        return gulp.src([config.PATHS.src + '/**/*.{png,jpg,gif,svg}', '!' + config.PATHS.src + '/assets/svg/sprite/*.*'])
+            .pipe($.imagemin(options.imagemin))
             .pipe(gulp.dest(config.PATHS.dist));
-
-            // Deletes dist path
-            del.sync(config.PATHS.dist);
-
-            return merge(src, bower);
     });
 
-    gulp.task('dist', ['jshint', 'src', 'translate']);
+    gulp.task('_dist:styles', function() {
+        return gulp.src(config.PATHS.src + '/**/*.css')
+            .pipe($.postcss(config.postcssProcessors))
+            .pipe(gulp.dest(config.PATHS.dist));
+    });
+
+    gulp.task('_dist:index', function() {
+        return gulp.src(config.PATHS.src + '/index.html')
+            .pipe($.htmlmin(options.htmlmin))
+            .pipe(gulp.dest(config.PATHS.dist));
+    });
+
+    gulp.task('_dist:js', function() {
+        return gulp.src(config.PATHS.src + '/**/*.js')
+            .pipe($.stripDebug())
+            .pipe(gulp.dest(config.PATHS.dist));
+    });
+
+    gulp.task('_bower', function() {
+        return gulp.src('bower_components/**/*.*')
+            .pipe(gulp.dest(config.PATHS.dist + '/bower_components'));
+    });
+
+    gulp.task('dist', ['jshint'], function() {
+
+        return runSequence(
+            '_dist:js',
+            '_dist:index',
+            '_dist:styles',
+            '_dist:img',
+            '_svgsprite',
+            '_translate'
+        );
+
+    });
 };

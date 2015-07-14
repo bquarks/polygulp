@@ -25,66 +25,56 @@ module.exports = function(gulp, config) {
         browserSync(bsConfig);
     };
 
-    gulp.task('styles', function() {
+    gulp.task('_server:styles', function() {
         return gulp.src(config.PATHS.src + '/**/*.css')
             .pipe($.postcss(config.postcssProcessors))
             .pipe(gulp.dest(config.PATHS.dist));
     });
 
-    gulp.task('js', function() {
+    gulp.task('_server:js', function() {
         return gulp.src(config.PATHS.src + '/**/*.js')
             .pipe(gulp.dest(config.PATHS.dist));
     });
 
-    gulp.task('html', function() {
+    gulp.task('_server:html', function() {
         return gulp.src(config.PATHS.src + '/**/*.html')
             .pipe(gulp.dest(config.PATHS.dist));
     });
 
-    gulp.task('resources', function() {
-        return gulp.src(config.PATHS.src + '/resources/**/*.*')
-            .pipe(gulp.dest(config.PATHS.dist + '/resources'));
-    });
-
-    gulp.task('img', function() {
-        return gulp.src([config.PATHS.src + '/**/*.{png,jpg,gif,svg}', '!' + config.PATHS.src + '/assets/svg/sprite/sprite.svg'])
+    gulp.task('_server:img', function() {
+        return gulp.src([config.PATHS.src + '/**/*.{png,jpg,gif,svg}', '!' + config.PATHS.src + '/assets/svg/sprite/*.*'])
             .pipe(gulp.dest(config.PATHS.dist));
-    });
-
-    gulp.task('svgsprite', function() {
-        del.sync(config.PATHS.dist + '/assets/svg/sprite/sprite.svg');
-        return gulp.src(config.PATHS.src + '/assets/svg/sprite/*.svg')
-            .pipe($.svgstore())
-            .pipe(gulp.dest(config.PATHS.dist + '/assets/svg/sprite'));
     });
 
     gulp.task('serve', ['jshint'], function() {
 
         del.sync(config.PATHS.dist);
-        server();
 
         gulp.watch([config.PATHS.src + '/**/*.html'], reload);
-        gulp.watch([config.PATHS.src + '/**/*.js'], ['jshint', 'js', reload]);
-        gulp.watch([config.PATHS.src + '/resources/**/*.*'], ['resources', reload]);
-        gulp.watch([config.PATHS.src + '/**/*.css'], ['styles', reload]);
-        gulp.watch([config.PATHS.src + '/**/*.html'], ['html', reload]);
-        gulp.watch([config.PATHS.src + '/**/*.{png,jpg,gif,svg}'], ['img', reload]);
-        gulp.watch([config.PATHS.src + '/assets/svg/sprite/*.svg'], ['svgsprite', reload]);
+        gulp.watch([config.PATHS.src + '/**/*.js'], ['jshint', '_server:js', reload]);
+        gulp.watch([config.PATHS.src + '/resources/**/*.*'], ['_resources', reload]);
+        gulp.watch([config.PATHS.src + '/**/*.css'], ['_server:styles', reload]);
+        gulp.watch([config.PATHS.src + '/**/*.html'], ['_server:html', reload]);
+        gulp.watch([config.PATHS.src + '/**/*.{png,jpg,gif,svg}'], ['_server:img', reload]);
+        gulp.watch([config.PATHS.src + '/assets/svg/sprite/*.svg'], ['_svgsprite', reload]);
 
         return runSequence(
-            'js',
-            'translate',
-            'styles',
-            'html',
-            'resources',
-            'img',
-            'svgsprite'
+            '_server:js',
+            '_translate',
+            '_server:styles',
+            '_server:html',
+            '_resources',
+            '_server:img',
+            '_svgsprite',
+            server
         );
-
     });
 
-    gulp.task('serve:dist', ['dist'], function() {
-        server();
+    gulp.task('serve:dist', function() {
+        return runSequence(
+            'dist',
+            server
+        );
     });
 
 };

@@ -47,7 +47,7 @@ module.exports = function(gulp, config) {
         mkdirp.sync(localesDir);
     };
 
-    gulp.task('translate', function() {
+    gulp.task('_translate', function() {
         var json;
         initDirs();
         _.each(translations, function(lang, name) {
