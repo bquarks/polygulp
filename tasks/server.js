@@ -70,9 +70,15 @@ module.exports = function(gulp, config) {
         );
     });
 
-    gulp.task('serve:dist', function() {
+    gulp.task('serve:dist', ['jshint'], function() {
+        del.sync(config.PATHS.dist);
+
         return runSequence(
-            'dist',
+            '_vulcanize',
+            '_dist:index',
+            '_dist:img',
+            '_svgsprite',
+            '_translate',
             server
         );
     });

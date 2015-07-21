@@ -5,6 +5,7 @@
 var $ = require('gulp-load-plugins')();
 var del = require('del');
 var merge = require('merge-stream');
+var path = require('path');
 
 module.exports = function(gulp, config) {
 
@@ -14,10 +15,10 @@ module.exports = function(gulp, config) {
             progressive: true
         },
         vulcanize: {
-            dest: config.PATHS.dist,
-            strip: true,
+            stripComments: true,
             inlineCss: true,
-            inlineScripts: true
+            inlineScripts: true,
+            excludes: [path.resolve('./bower_components/polymer/polymer.html'), path.resolve('./bower_components/polymer/polymer-micro.html'), path.resolve('./bower_components/polymer/polymer-mini.html')]
         },
         htmlmin: {
             removeComments: true,
@@ -54,17 +55,51 @@ module.exports = function(gulp, config) {
             .pipe(gulp.dest(config.PATHS.dist));
     });
 
-    gulp.task('_bower', function() {
-        return gulp.src('bower_components/**/*.*')
-            .pipe(gulp.dest(config.PATHS.dist + '/bower_components'));
+    gulp.task('usemin', function() {
+        return gulp.src(config.PATHS.src + '/*.html')
+            .pipe($.usemin({
+                css: [$.minifyCss(), 'concat'],
+                html: [$.htmlmin(options.htmlmin)],
+                js: [$.uglify()],
+                inlinejs: [$.uglify()],
+                inlinecss: [$.minifyCss(), 'concat']
+            }))
+            .pipe(gulp.dest(config.PATHS.dist));
+    });
+
+    gulp.task('_vulcanize', function() {
+
+        var index = gulp.src(config.PATHS.src + 'index.html')
+            .pipe($.vulcanize(options.vulcanize))
+            .pipe(gulp.dest(config.PATHS.dist ))
+            .pipe($.size({
+                title: 'vulcanize'
+            }));
+
+        var imports = gulp.src(config.PATHS.src + '/main/imports.html')
+            .pipe($.vulcanize(options.vulcanize))
+            .pipe(gulp.dest(config.PATHS.dist + '/main'))
+            .pipe($.size({
+                title: 'vulcanize:imports'
+            }));
+
+        var routes = gulp.src(config.PATHS.src + '/routes/routes.html')
+            .pipe($.vulcanize(options.vulcanize))
+            .pipe(gulp.dest(config.PATHS.dist + '/routes'))
+            .pipe($.size({
+                title: 'vulcanize:routes'
+            }));
+
+        return merge(imports, routes);
     });
 
     gulp.task('dist', ['jshint'], function() {
 
+        del.sync(config.PATHS.dist);
+
         return runSequence(
-            '_dist:js',
+            '_vulcanize',
             '_dist:index',
-            '_dist:styles',
             '_dist:img',
             '_svgsprite',
             '_translate'
