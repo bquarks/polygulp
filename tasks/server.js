@@ -75,6 +75,7 @@ module.exports = function(gulp, config) {
 
         return runSequence(
             '_vulcanize',
+            '_bower',
             '_dist:index',
             '_dist:img',
             '_svgsprite',

@@ -17,8 +17,7 @@ module.exports = function(gulp, config) {
         vulcanize: {
             stripComments: true,
             inlineCss: true,
-            inlineScripts: true,
-            excludes: [path.resolve('./bower_components/polymer/polymer.html'), path.resolve('./bower_components/polymer/polymer-micro.html'), path.resolve('./bower_components/polymer/polymer-mini.html')]
+            inlineScripts: true
         },
         htmlmin: {
             removeComments: true,
@@ -71,7 +70,7 @@ module.exports = function(gulp, config) {
 
         var index = gulp.src(config.PATHS.src + 'index.html')
             .pipe($.vulcanize(options.vulcanize))
-            .pipe(gulp.dest(config.PATHS.dist ))
+            .pipe(gulp.dest(config.PATHS.dist))
             .pipe($.size({
                 title: 'vulcanize'
             }));
@@ -93,12 +92,17 @@ module.exports = function(gulp, config) {
         return merge(imports, routes);
     });
 
+    gulp.task('_bower', function() {
+        return gulp.src('bower_components/webcomponentsjs/**/*.js').pipe(gulp.dest(config.PATHS.dist + '/bower_components/webcomponentsjs'));
+    });
+
     gulp.task('dist', ['jshint'], function() {
 
         del.sync(config.PATHS.dist);
 
         return runSequence(
             '_vulcanize',
+            '_bower',
             '_dist:index',
             '_dist:img',
             '_svgsprite',

@@ -69,6 +69,7 @@
     "mkdirp": "0.5.1",
     "mocha": "2.2.5",
     "postcss-custom-media": "4.1.0",
+    "postcss-import": "6.2.0",
     "postcss-nested": "0.3.2",
     "require-dir": "0.3.0",
     "run-sequence": "1.1.1",

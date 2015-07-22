@@ -6,6 +6,7 @@ var customMedia = require("postcss-custom-media");
 var nested = require('postcss-nested');
 var autoprefixer = require('autoprefixer');
 var extend = require('deep-extend');
+var atImport = require("postcss-import");
 
 module.exports = function(gulp, appSettings) {
 
@@ -16,6 +17,7 @@ module.exports = function(gulp, appSettings) {
             test: 'test'
         },
         postcssProcessors: [
+            atImport,
             customMedia,
             nested,
             autoprefixer({
