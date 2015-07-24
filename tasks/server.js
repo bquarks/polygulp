@@ -74,6 +74,7 @@ module.exports = function(gulp, config) {
         del.sync(config.PATHS.dist);
 
         return runSequence(
+            '_dist:styles',
             '_vulcanize',
             '_bower',
             '_dist:index',

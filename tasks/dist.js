@@ -104,6 +104,7 @@ module.exports = function(gulp, config) {
             '_vulcanize',
             '_bower',
             '_dist:index',
+            '_dist:styles',
             '_dist:img',
             '_svgsprite',
             '_translate'
