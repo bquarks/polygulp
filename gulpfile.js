@@ -228,9 +228,7 @@ var runSequence = require('run-sequence').use(gulp);
             searchPath: ['.tmp', 'app', 'dist']
         });
 
-        return gulp.src([config.path.app + '**/*.html', '!{elements, routes, pages, main, test}/**/*.html'])
-            // Replace path for vulcanized assets
-            .pipe($.if('*.html', $.replace('elements/elements.html', 'elements/elements.vulcanized.html'))) // TODO
+        return gulp.src([config.path.app + '**/*.html', '!{elements, test}/**/*.html'])
             .pipe(assets)
             // Concatenate And Minify JavaScript
             .pipe($.if('*.js', $.uglify({
