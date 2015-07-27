@@ -1,8 +1,8 @@
-'use strict';
-
 /* global module, require */
 
 module.exports = function(gulp, config) {
+
+    'use strict';
 
     var nightwatch = require('gulp-nightwatch');
     var karma = require('karma').server;

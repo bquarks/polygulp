@@ -1,18 +1,19 @@
-/* global module, require*/
+/* global module, require */
 
-'use strict';
-
-var $ = require('gulp-load-plugins')();
-var requireDir = require('require-dir');
-var path = require('path');
-var _ = require('underscore');
-var fs = require('fs');
-var mkdirp = require('mkdirp');
 
 module.exports = function(gulp, config) {
 
-    var translations = requireDir(path.resolve(config.PATHS.translations));
-    var localesDir = path.resolve(config.PATHS.dist + '/resources/locales');
+    'use strict';
+
+    var requireDir = require('require-dir');
+    var path = require('path');
+    var _ = require('underscore');
+    var fs = require('fs');
+    var mkdirp = require('mkdirp');
+
+    // translate
+    var translations = requireDir(path.resolve(config.path.translations));
+    var localesDir = path.resolve('.tmp/resources/locales');
     var chars = {
         '{{': '__',
         '}}': '__'
@@ -28,7 +29,7 @@ module.exports = function(gulp, config) {
     var parseLang = function(terms) {
         var parsedTerms = {};
         _.each(terms, function(term) {
-            term.term =  replaceChars(term.term);
+            term.term = replaceChars(term.term);
             parsedTerms[term.term] = {
                 description: "",
                 message: term.definition

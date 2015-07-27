@@ -1,88 +1,67 @@
 /* global module, require */
 
-'use strict';
-
-var $ = require('gulp-load-plugins')();
-var browserSync = require('browser-sync');
-var reload = browserSync.reload;
-var del = require('del');
-var historyApiFallback = require('connect-history-api-fallback');
-
 module.exports = function(gulp, config) {
 
-    var runSequence = require('run-sequence').use(gulp);
-    var bsConfig = {
-        notify: false,
-        server: {
-            middleware: [historyApiFallback()],
-            baseDir: config.PATHS.dist,
-            routes: {
-                '/bower_components': 'bower_components'
+    'use strict';
+
+    var $ = require('gulp-load-plugins')();
+    var browserSync = require('browser-sync');
+    var reload = browserSync.reload;
+    var del = require('del');
+    var historyApiFallback = require('connect-history-api-fallback');
+
+    // Watch Files For Changes & Reload
+    gulp.task('serve', ['styles', 'elements', 'pages', 'images', 'svgsprite', '_translate'], function() {
+        browserSync({
+            notify: false,
+            logPrefix: 'PSK',
+            snippetOptions: {
+                rule: {
+                    match: '<span id="browser-sync-binding"></span>',
+                    fn: function(snippet) {
+                        return snippet;
+                    }
+                }
+            },
+            // Run as an https by uncommenting 'https: true'
+            // Note: this uses an unsigned certificate which on first access
+            //       will present a certificate warning in the browser.
+            // https: true,
+            server: {
+                baseDir: ['.tmp', 'app'],
+                middleware: [historyApiFallback()],
+                routes: {
+                    '/bower_components': 'bower_components'
+                }
             }
-        }
-    };
-    var server = function() {
-        browserSync(bsConfig);
-    };
+        });
 
-    gulp.task('_server:styles', function() {
-        return gulp.src(config.PATHS.src + '/**/*.css')
-            .pipe($.postcss(config.postcssProcessors))
-            .pipe(gulp.dest(config.PATHS.dist));
+        gulp.watch(['app/**/*.html'], reload);
+        gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
+        gulp.watch(['app/elements/**/*.css'], ['elements', reload]);
+        gulp.watch(['app/{scripts,elements}/**/*.js'], ['jshint']);
+        gulp.watch(['app/images/**/*'], reload);
     });
 
-    gulp.task('_server:js', function() {
-        return gulp.src(config.PATHS.src + '/**/*.js')
-            .pipe(gulp.dest(config.PATHS.dist));
+    // Build and serve the output from the dist build
+    gulp.task('serve:dist', ['default'], function() {
+        browserSync({
+            notify: false,
+            logPrefix: 'PSK',
+            snippetOptions: {
+                rule: {
+                    match: '<span id="browser-sync-binding"></span>',
+                    fn: function(snippet) {
+                        return snippet;
+                    }
+                }
+            },
+            // Run as an https by uncommenting 'https: true'
+            // Note: this uses an unsigned certificate which on first access
+            //       will present a certificate warning in the browser.
+            // https: true,
+            server: 'dist',
+            middleware: [historyApiFallback()]
+        });
     });
-
-    gulp.task('_server:html', function() {
-        return gulp.src(config.PATHS.src + '/**/*.html')
-            .pipe(gulp.dest(config.PATHS.dist));
-    });
-
-    gulp.task('_server:img', function() {
-        return gulp.src([config.PATHS.src + '/**/*.{png,jpg,gif,svg}', '!' + config.PATHS.src + '/assets/svg/sprite/*.*'])
-            .pipe(gulp.dest(config.PATHS.dist));
-    });
-
-    gulp.task('serve', ['jshint'], function() {
-
-        del.sync(config.PATHS.dist);
-
-        gulp.watch([config.PATHS.src + '/**/*.html'], reload);
-        gulp.watch([config.PATHS.src + '/**/*.js'], ['jshint', '_server:js', reload]);
-        gulp.watch([config.PATHS.src + '/resources/**/*.*'], ['_resources', reload]);
-        gulp.watch([config.PATHS.src + '/**/*.css'], ['_server:styles', reload]);
-        gulp.watch([config.PATHS.src + '/**/*.html'], ['_server:html', reload]);
-        gulp.watch([config.PATHS.src + '/**/*.{png,jpg,gif,svg}'], ['_server:img', reload]);
-        gulp.watch([config.PATHS.src + '/assets/svg/sprite/*.svg'], ['_svgsprite', reload]);
-
-        return runSequence(
-            '_server:js',
-            '_translate',
-            '_server:styles',
-            '_server:html',
-            '_resources',
-            '_server:img',
-            '_svgsprite',
-            server
-        );
-    });
-
-    gulp.task('serve:dist', ['jshint'], function() {
-        del.sync(config.PATHS.dist);
-
-        return runSequence(
-            '_dist:styles',
-            '_vulcanize',
-            '_bower',
-            '_dist:index',
-            '_dist:img',
-            '_svgsprite',
-            '_translate',
-            server
-        );
-    });
-
 };

@@ -1,13 +1,13 @@
 /* global module, require, process */
 
-'use strict';
-
-var $ = require('gulp-load-plugins')();
-var fs = require('fs');
-
 module.exports = function(gulp, config) {
 
-    gulp.task('deploy', ['dist'], function() {
+    'use strict';
+
+    var $ = require('gulp-load-plugins')();
+    var fs = require('fs');
+
+    gulp.task('deploy', ['default'], function() {
 
         var env = process.env.environment || 'integration';
         var bucket = JSON.parse(fs.readFileSync(config.PATHS.src + '/resources/config/' + env + '/config.json', 'utf8')).deploy.bucket;
@@ -31,7 +31,5 @@ module.exports = function(gulp, config) {
             .pipe(publisher.sync())
             .pipe(publisher.cache())
             .pipe($.awspublish.reporter());
-
     });
-
 };

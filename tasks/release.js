@@ -1,8 +1,8 @@
-'use strict';
-
 /* global module, require, console */
 
 module.exports = function(gulp) {
+
+    'use strict';
 
     var runSequence = require('run-sequence').use(gulp);
     var gutil = require('gulp-util');
@@ -73,7 +73,6 @@ module.exports = function(gulp) {
             }, cb);
         });
     });
-
 
     gulp.task('release', function(callback) {
         runSequence(
