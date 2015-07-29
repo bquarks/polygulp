@@ -28,7 +28,7 @@ module.exports = function(gulp, config) {
             //       will present a certificate warning in the browser.
             // https: true,
             server: {
-                baseDir: ['.tmp', 'app'],
+                baseDir: [config.paths.tmp, config.paths.app],
                 middleware: [historyApiFallback()],
                 routes: {
                     '/bower_components': 'bower_components'
@@ -36,11 +36,12 @@ module.exports = function(gulp, config) {
             }
         });
 
-        gulp.watch(['app/**/*.html'], reload);
-        gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
-        gulp.watch(['app/elements/**/*.css'], ['elements', reload]);
-        gulp.watch(['app/{scripts,elements}/**/*.js'], ['jshint']);
-        gulp.watch(['app/images/**/*'], reload);
+        gulp.watch([config.paths.app + '/**/*.html'], reload);
+        gulp.watch([config.paths.app + '/styles/**/*.css'], ['styles', reload]);
+        gulp.watch([config.paths.app + '/elements/**/*.css'], ['elements', reload]);
+        gulp.watch([config.paths.app + '/pages/**/*.css'], ['pages', reload]);
+        gulp.watch([config.paths.app + '/assets/images/**/*'], reload);
+        gulp.watch([config.paths.app + '/**/*.js'], ['jshint']);
     });
 
     // Build and serve the output from the dist build
@@ -60,7 +61,7 @@ module.exports = function(gulp, config) {
             // Note: this uses an unsigned certificate which on first access
             //       will present a certificate warning in the browser.
             // https: true,
-            server: 'dist',
+            server: config.paths.dist,
             middleware: [historyApiFallback()]
         });
     });

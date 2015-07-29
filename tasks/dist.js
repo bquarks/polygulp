@@ -20,20 +20,20 @@ module.exports = function(gulp, config) {
             '!app/precache.json'
         ], {
             dot: true
-        }).pipe(gulp.dest('dist'));
+        }).pipe(gulp.dest(config.paths.dist));
 
         var bower = gulp.src([
             'bower_components/**/*'
         ]).pipe(gulp.dest('dist/bower_components'));
 
-        var elements = gulp.src([config.path.app + 'elements/**/*.html'])
-            .pipe(gulp.dest(config.path.dist + 'elements'));
+        var elements = gulp.src([config.paths.app + '/elements/**/*.html'])
+            .pipe(gulp.dest(config.paths.dist + '/elements'));
 
-        var scripts = gulp.src([config.path.app + '/**/*.js'])
-            .pipe(gulp.dest(config.path.dist));
+        var scripts = gulp.src([config.paths.app + '/**/*.js'])
+            .pipe(gulp.dest(config.paths.dist));
 
-        var resources = gulp.src(['.tmp/resources/locales/**/*'])
-            .pipe(gulp.dest(config.path.dist + 'resources/locales'));
+        var resources = gulp.src([config.paths.tmp + '/resources/locales/**/*'])
+            .pipe(gulp.dest(config.paths.dist + '/resources/locales'));
 
         // var swBootstrap = gulp.src(['bower_components/platinum-sw/bootstrap/*.js'])
         //     .pipe(gulp.dest('dist/elements/bootstrap'));
@@ -50,15 +50,13 @@ module.exports = function(gulp, config) {
     // Scan Your HTML For Assets & Optimize Them
     gulp.task('html', function() {
         var assets = $.useref.assets({
-            searchPath: ['.tmp', 'app', 'dist']
+            searchPath: [config.paths.tmp, config.paths.app]
         });
 
-        return gulp.src([config.path.app + '**/*.html', '!{elements, test}/**/*.html'])
+        return gulp.src([config.paths.app + '/**/*.html', '!{test}/**/*.html'])
             .pipe(assets)
             // Concatenate And Minify JavaScript
-            .pipe($.if('*.js', $.uglify({
-                preserveComments: 'some'
-            })))
+            .pipe($.if('*.js', $.uglify()))
             // Concatenate And Minify Styles
             // In case you are still using useref build blocks
             .pipe($.if('*.css', $.cssmin()))
@@ -71,7 +69,7 @@ module.exports = function(gulp, config) {
                 spare: true
             })))
             // Output Files
-            .pipe(gulp.dest(config.path.dist))
+            .pipe(gulp.dest(config.paths.dist))
             .pipe($.size({
                 title: 'html'
             }));
@@ -80,16 +78,16 @@ module.exports = function(gulp, config) {
     // Vulcanize imports
     gulp.task('vulcanize', function() {
 
-        var imports = gulp.src(config.path.dist + 'main/imports.html')
+        var imports = gulp.src(config.paths.dist + '/main/imports.html')
             .pipe($.vulcanize(config.vulcanize))
-            .pipe(gulp.dest(config.path.dist + 'main'))
+            .pipe(gulp.dest(config.paths.dist + '/main'))
             .pipe($.size({
                 title: 'vulcanize:imports'
             }));
 
-        var routes = gulp.src(config.path.dist + 'routes/routes.html')
+        var routes = gulp.src(config.paths.dist + '/routes/routes.html')
             .pipe($.vulcanize(config.vulcanize))
-            .pipe(gulp.dest(config.path.dist + 'routes'))
+            .pipe(gulp.dest(config.paths.dist + '/routes'))
             .pipe($.size({
                 title: 'vulcanize:routes'
             }));
@@ -100,7 +98,7 @@ module.exports = function(gulp, config) {
     // Generate a list of files that should be precached when serving from 'dist'.
     // The list will be consumed by the <platinum-sw-cache> element.
     gulp.task('precache', function(callback) {
-        var dir = 'dist';
+        var dir = config.paths.dist;
 
         glob('{elements,scripts,styles}/**/*.*', {
             cwd: dir

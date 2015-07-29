@@ -12,13 +12,13 @@ module.exports = function(gulp, config) {
 
     var styleTask = function(stylesPath, srcs) {
         return gulp.src(srcs.map(function(src) {
-                return path.join(config.path.app, stylesPath, src);
+                return path.join(config.paths.app, stylesPath, src);
             }))
             .pipe($.changed(stylesPath, {
                 extension: '.css'
             }))
             .pipe($.postcss(config.postcssProcessors))
-            .pipe(gulp.dest('.tmp/' + stylesPath))
+            .pipe(gulp.dest(config.paths.tmp + '/' + stylesPath))
             .pipe($.if('*.css', $.cssmin()))
             .pipe(gulp.dest('dist/' + stylesPath))
             .pipe($.size({
@@ -42,10 +42,10 @@ module.exports = function(gulp, config) {
     // Lint JavaScript
     gulp.task('jshint', function() {
         return gulp.src([
-                config.path.app + 'elements/**/*.js',
-                config.path.app + 'pages/**/*.js',
-                config.path.app + 'routes/**/*.js',
-                config.path.app + 'main/**/*.js'
+                config.paths.app + '/elements/**/*.js',
+                config.paths.app + '/pages/**/*.js',
+                config.paths.app + '/routes/**/*.js',
+                config.paths.app + '/main/**/*.js'
             ])
             .pipe(reload({
                 stream: true,
@@ -59,22 +59,22 @@ module.exports = function(gulp, config) {
 
     // Optimize Images
     gulp.task('images', function() {
-        return gulp.src(config.path.app + 'assets/**/*')
+        return gulp.src(config.paths.app + '/assets/**/*')
             .pipe($.cache($.imagemin({
                 progressive: true,
                 interlaced: true
             })))
-            .pipe(gulp.dest(config.path.dist + 'assets/'))
+            .pipe(gulp.dest(config.paths.dist + '/assets/'))
             .pipe($.size({
                 title: 'images'
             }));
     });
 
     gulp.task('svgsprite', function() {
-        del.sync(config.path.dist + 'assets/svg/sprite.svg');
-        gulp.src(config.path.app + 'assets/svg/sprite/*.svg')
+        del.sync(config.paths.dist + '/assets/svg/sprite.svg');
+        gulp.src(config.paths.app + '/assets/svg/sprite/*.svg')
             .pipe($.svgstore())
-            .pipe(gulp.dest(config.path.dist + 'assets/svg'));
+            .pipe(gulp.dest(config.paths.dist + '/assets/svg'));
     });
 
     // Copy Web Fonts To Dist
@@ -87,5 +87,5 @@ module.exports = function(gulp, config) {
     });
 
     // Clean Output Directory
-    gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
+    gulp.task('clean', del.bind(null, [config.paths.tmp, config.paths.dist]));
 };

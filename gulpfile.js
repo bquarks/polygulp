@@ -14,11 +14,12 @@ module.exports = function(gulp, options) {
     var atImport = require("postcss-import");
 
     var defaults = {
-        path: {
-            app: 'app/',
-            dist: 'dist/',
-            test: 'test/',
-            translations: 'bower_components/translations/clients/web'
+        paths: {
+            tmp: '.tmp',
+            app: 'app',
+            dist: 'dist',
+            test: 'test',
+            translations: ''
         },
         postcssProcessors: [
             atImport,

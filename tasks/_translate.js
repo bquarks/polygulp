@@ -12,8 +12,8 @@ module.exports = function(gulp, config) {
     var mkdirp = require('mkdirp');
 
     // translate
-    var translations = requireDir(path.resolve(config.path.translations));
-    var localesDir = path.resolve('.tmp/resources/locales');
+    var translations = requireDir(path.resolve(config.paths.translations));
+    var localesDir = path.resolve(config.paths.tmp + '/resources/locales');
     var chars = {
         '{{': '__',
         '}}': '__'

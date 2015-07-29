@@ -10,7 +10,7 @@ module.exports = function(gulp, config) {
     gulp.task('deploy', ['default'], function() {
 
         var env = process.env.environment || 'integration';
-        var bucket = JSON.parse(fs.readFileSync(config.PATHS.src + '/resources/config/' + env + '/config.json', 'utf8')).deploy.bucket;
+        var bucket = JSON.parse(fs.readFileSync(config.paths.src + '/resources/config/' + env + '/config.json', 'utf8')).deploy.bucket;
 
         var publisher = $.awspublish.create({
             params: {
@@ -23,7 +23,7 @@ module.exports = function(gulp, config) {
             'Cache-Control': 'max-age=2592000'
         };
 
-        return gulp.src(config.PATHS.dist + '/**/*.*')
+        return gulp.src(config.paths.dist + '/**/*.*')
             .pipe($.awspublish.gzip({
                 ext: ''
             }))
