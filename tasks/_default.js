@@ -70,11 +70,16 @@ module.exports = function(gulp, config) {
             }));
     });
 
+    // Svg sprite generator
     gulp.task('svgsprite', function() {
-        del.sync(config.paths.dist + '/assets/svg/sprite.svg');
-        gulp.src(config.paths.app + '/assets/svg/sprite/*.svg')
+        del.sync([
+            config.paths.app + '/assets/svg/sprite/svg.svg',
+            config.paths.dist + '/assets/svg/sprite/svg.svg',
+        ]);
+        gulp.src(config.paths.app + '/assets/svg/*.svg')
             .pipe($.svgstore())
-            .pipe(gulp.dest(config.paths.dist + '/assets/svg'));
+            .pipe(gulp.dest(config.paths.app + '/assets/svg/sprite'))
+            .pipe(gulp.dest(config.paths.dist + '/assets/svg/sprite'));
     });
 
     // Copy Web Fonts To Dist
