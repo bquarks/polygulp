@@ -15,21 +15,13 @@ module.exports = function(gulp, config) {
         browserSync({
             notify: false,
             logPrefix: 'PSK',
-            snippetOptions: {
-                rule: {
-                    match: '<span id="browser-sync-binding"></span>',
-                    fn: function(snippet) {
-                        return snippet;
-                    }
-                }
-            },
             // Run as an https by uncommenting 'https: true'
             // Note: this uses an unsigned certificate which on first access
             //       will present a certificate warning in the browser.
             // https: true,
             server: {
                 baseDir: [config.paths.tmp, config.paths.app],
-                middleware: [historyApiFallback()],
+                // middleware: [historyApiFallback()],
                 routes: {
                     '/bower_components': 'bower_components'
                 }
@@ -49,20 +41,11 @@ module.exports = function(gulp, config) {
         browserSync({
             notify: false,
             logPrefix: 'PSK',
-            snippetOptions: {
-                rule: {
-                    match: '<span id="browser-sync-binding"></span>',
-                    fn: function(snippet) {
-                        return snippet;
-                    }
-                }
-            },
             // Run as an https by uncommenting 'https: true'
             // Note: this uses an unsigned certificate which on first access
             //       will present a certificate warning in the browser.
             // https: true,
-            server: config.paths.dist,
-            middleware: [historyApiFallback()]
+            server: config.paths.dist
         });
     });
 };
