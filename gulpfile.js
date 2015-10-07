@@ -14,6 +14,10 @@ module.exports = function(gulp, options) {
     var atImport = require("postcss-import");
 
     var defaults = {
+        projectInfo: {
+            versionRegex: /(version\s?[=:]\s?)["']\d.{3,}['"]/g, //version: 0.0.0 || version = 0.0.0
+            versionFiles: [],
+        },
         paths: {
             tmp: '.tmp',
             app: 'app',

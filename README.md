@@ -39,16 +39,17 @@ Generates optimized application for production in `dist` folder.
 #### gulp release
 Bumps bower & npm version, commits changed files and creates a new tag with the specified version.
 
-task                        | version
-----------------------------|-----------------
-gulp release --patch        | v0.0.1 -> v0.0.2
-gulp release --minor        | v0.0.1 -> v0.1.0
-gulp release --major        | v0.0.1 -> v1.0.1
-gulp release --version 1.1.1| v0.0.1 -> v1.1.1
+> NOTE: You must specific a branch name with --branch
+
+task                                             | version
+-------------------------------------------------|-----------------
+gulp release --patch --branch branchName         | v0.0.1 -> v0.0.2
+gulp release --minor --branch branchName         | v0.0.1 -> v0.1.0
+gulp release --major --branch branchName         | v0.0.1 -> v1.0.1
+gulp release --version 1.1.1 --branch branchName | v0.0.1 -> v1.1.1
 
 #### gulp test
-Runs tests
- once and exit with [Karma](https://github.com/karma-runner/karma).
+Runs tests once and exit with [Karma](https://github.com/karma-runner/karma).
 
 #### gulp test:ci
 Same as `gulp test`, but using PhantomJS browser, suitable for CI servers.
