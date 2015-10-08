@@ -11,6 +11,10 @@ module.exports = function(gulp, config) {
     var fs = require('fs');
     var mkdirp = require('mkdirp');
 
+    if (!config.paths.translations) {
+        return;
+    }
+
     // translate
     var translations = requireDir(path.resolve(config.paths.translations));
     var localesDir = path.resolve(config.paths.tmp + '/resources/locales');

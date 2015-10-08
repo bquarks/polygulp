@@ -55,7 +55,7 @@ module.exports = function(gulp, options) {
 
     // Load tasks for web-component-tester
     // Adds tasks for `gulp test:local` and `gulp test:remote`
-    require('web-component-tester').gulp.init(gulp);
+    // require('web-component-tester').gulp.init(gulp);
 
     // Load custom tasks from the `tasks` directory
     try {
