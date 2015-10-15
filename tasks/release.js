@@ -89,9 +89,16 @@ module.exports = function(gulp, config) {
 
     // // Create new tag with the Bower version
     gulp.task('tag-version', function(cb) {
-        var version = 'v' + my.version();
+        var version = my.version();
 
-        git.tag(version, 'Created Tag on the for version: ' + version).on('error', gutil.log);
+        git.tag(version, 'Created Tag on the for version: ' + version, function(error) {
+            if (error) {
+                return cb(error);
+            }
+            git.push('origin', my.branch(), {
+                args: '--tags'
+            });
+        });
     });
 
     gulp.task('release', function(callback) {
