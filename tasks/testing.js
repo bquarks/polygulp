@@ -4,7 +4,6 @@ module.exports = function(gulp, config) {
 
     'use strict';
 
-    var nightwatch = require('gulp-nightwatch');
     var karma = require('karma').server;
     var argv = require('yargs').argv;
     var _ = require('underscore');
@@ -53,16 +52,5 @@ module.exports = function(gulp, config) {
         karma.start({
             configFile: path.resolve(config.paths.test + '/karma/karma.conf.js')
         }, done);
-    });
-
-    /**
-     * Run selenium test with command line options (optional)
-     */
-    gulp.task('selenium', function() {
-        gulp.src('')
-            .pipe(nightwatch({
-                configFile: path.resolve(config.paths.test + '/nightwatch/nightwatch.json'),
-                cliArgs: my.commandLine()
-            }));
     });
 };
