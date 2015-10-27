@@ -5,7 +5,6 @@ module.exports = function(gulp, config) {
     'use strict';
 
     var $ = require('gulp-load-plugins')();
-    var del = require('del');
     var merge = require('merge-stream');
     var path = require('path');
     var glob = require('glob');
@@ -32,8 +31,11 @@ module.exports = function(gulp, config) {
         var scripts = gulp.src([config.paths.app + '/**/*.js'])
             .pipe(gulp.dest(config.paths.dist));
 
-        var resources = gulp.src([config.paths.tmp + '/resources/locales/**/*'])
-            .pipe(gulp.dest(config.paths.dist + '/resources/locales'));
+        var locales = gulp.src([config.paths.tmp + '/resources/locales/**/*'])
+            .pipe(gulp.dest(config.paths.dist + '/resources/locales/'));
+
+        var mocks = gulp.src([config.paths.app + '/resources/mocks/*'])
+            .pipe(gulp.dest(config.paths.dist + '/resources/mocks/'));
 
         // var swBootstrap = gulp.src(['bower_components/platinum-sw/bootstrap/*.js'])
         //     .pipe(gulp.dest('dist/elements/bootstrap'));
@@ -41,7 +43,7 @@ module.exports = function(gulp, config) {
         // var swToolbox = gulp.src(['bower_components/sw-toolbox/*.js'])
         //     .pipe(gulp.dest('dist/sw-toolbox'));
 
-        return merge(app, bower, elements, resources, scripts)
+        return merge(app, bower, elements, locales, mocks, scripts)
             .pipe($.size({
                 title: 'copy'
             }));
