@@ -35,12 +35,12 @@ module.exports = function(gulp, config) {
         _.each(terms, function(term) {
             term.term = replaceChars(term.term);
             parsedTerms[term.term] = {
-                description: "",
+                description: '',
                 message: term.definition
             };
             if (term.term_plural !== '') {
                 parsedTerms[term.term + '_plural'] = {
-                    description: "",
+                    description: '',
                     message: term.term_plural
                 };
             }

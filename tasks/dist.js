@@ -34,12 +34,9 @@ module.exports = function(gulp, config) {
         var locales = gulp.src([config.paths.tmp + '/resources/locales/**/*'])
             .pipe(gulp.dest(config.paths.dist + '/resources/locales/'));
 
-        var mocks = gulp.src([config.paths.app + '/resources/mocks/*'])
+        var mocks = gulp.src([config.paths.app + '/resources/mocks/**/*'])
             .pipe(gulp.dest(config.paths.dist + '/resources/mocks/'));
 
-        // var swBootstrap = gulp.src(['bower_components/platinum-sw/bootstrap/*.js'])
-        //     .pipe(gulp.dest('dist/elements/bootstrap'));
-        //
         // var swToolbox = gulp.src(['bower_components/sw-toolbox/*.js'])
         //     .pipe(gulp.dest('dist/sw-toolbox'));
 
@@ -50,51 +47,31 @@ module.exports = function(gulp, config) {
     });
 
     // Scan Your HTML For Assets & Optimize Them
-    gulp.task('html', function() {
-        var assets = $.useref.assets({
-            searchPath: [config.paths.tmp, config.paths.app]
-        });
-
+    gulp.task('usemin', function() {
         return gulp.src([config.paths.app + '/**/*.html', '!{test}/**/*.html'])
-            .pipe(assets)
-            // Concatenate And Minify JavaScript
-            .pipe($.if('*.js', $.uglify()))
-            // Concatenate And Minify Styles
-            // In case you are still using useref build blocks
-            .pipe($.if('*.css', $.cssmin()))
-            .pipe(assets.restore())
-            .pipe($.useref())
-            // Minify Any HTML
-            .pipe($.if('*.html', $.minifyHtml({
-                quotes: true,
-                empty: true,
-                spare: true
-            })))
-            // Output Files
-            .pipe(gulp.dest(config.paths.dist))
-            .pipe($.size({
-                title: 'html'
-            }));
+        .pipe($.usemin({
+            css: [$.rev],
+            html: [function () { return $.minifyHtml({
+                    quotes: true,
+                    empty: true,
+                    spare: true
+                });
+            }],
+            js: [$.uglify, $.rev],
+            inlinejs: [$.uglify],
+            inlinecss: [$.minifyCss, 'concat']
+        }))
+        .pipe(gulp.dest(config.paths.dist));
     });
 
     // Vulcanize imports
     gulp.task('vulcanize', function() {
-
-        var imports = gulp.src(config.paths.dist + '/main/imports.html')
+        return gulp.src(config.paths.dist + '/main/imports.html')
             .pipe($.vulcanize(config.vulcanize))
             .pipe(gulp.dest(config.paths.dist + '/main'))
             .pipe($.size({
                 title: 'vulcanize:imports'
             }));
-
-        var routes = gulp.src(config.paths.dist + '/routes/routes.html')
-            .pipe($.vulcanize(config.vulcanize))
-            .pipe(gulp.dest(config.paths.dist + '/routes'))
-            .pipe($.size({
-                title: 'vulcanize:routes'
-            }));
-
-        return merge(imports, routes);
     });
 
     // Generate a list of files that should be precached when serving from 'dist'.
@@ -118,7 +95,7 @@ module.exports = function(gulp, config) {
     // Build Production Files, the Default Task
     gulp.task('default', ['clean'], function(cb) {
         runSequence(
-            '_translate', ['copy', 'styles'], ['elements', 'pages'], ['jshint', 'images', 'svgsprite', 'fonts', 'html'],
+            '_translate', ['copy', 'styles'], ['elements', 'pages'], ['jshint', 'images', 'svgsprite', 'fonts', 'usemin'],
             'vulcanize',
             cb);
         // Note: add , 'precache' , after 'vulcanize', if your are going to use Service Worker

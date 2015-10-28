@@ -1,0 +1,79 @@
+{
+    "requireCurlyBraces": [
+        "if",
+        "else",
+        "for",
+        "while",
+        "do"
+    ],
+    "requireSpaceAfterKeywords": [
+        "if",
+        "else",
+        "for",
+        "while",
+        "do",
+        "switch",
+        "return",
+        "catch",
+        ")"
+    ],
+    "requireSpaceAfterComma": true,
+    "requireSpaceBeforeComma": false,
+    "requireSpacesInsideObjectBrackets": "all",
+    "requireSpacesInsideParentheses": false,
+    "requireSpaceBetweenArguments": true,
+    "requireSpacesInForStatement": true,
+
+    "disallowKeywords": [
+        "with"
+    ],
+    "requireKeywordsOnNewLine": [
+    ],
+
+    "requireSpaceBeforeBinaryOperators": true,
+    "requireSpaceAfterBinaryOperators": true,
+
+    "disallowMultipleVarDecl": false,
+
+    "disallowEmptyBlocks": true,
+
+    "requireParenthesesAroundIIFE": true,
+    "requireSpacesInFunctionDeclaration": {
+        "beforeOpeningCurlyBrace": true
+    },
+    "requireSpacesInAnonymousFunctionExpression": {
+        "beforeOpeningCurlyBrace": true
+    },
+    "requireSpaceAfterPrefixUnaryOperators": ["++", "--", "+", "-", "*", "~"],
+    "requireSpacesInConditionalExpression": {
+        "afterTest": true,
+        "beforeConsequent": true,
+        "afterConsequent": true,
+        "beforeAlternate": true
+    },
+    "requireCommaBeforeLineBreak": true,
+
+    "validateQuoteMarks": "'",
+    "disallowMultipleLineStrings": false,
+
+    "disallowImplicitTypeConversion": [
+        "numeric",
+        "binary",
+    ],
+    "disallowYodaConditions": true,
+
+    "requireDotNotation": true,
+    "disallowSpaceAfterObjectKeys": true,
+    "disallowQuotedKeysInObjects": true,
+    "disallowQuotedKeysInObjects": true,
+
+    "requireSpaceAfterLineComment": true,
+    "requireLineFeedAtFileEnd": true,
+    "disallowMultipleLineBreaks": false,
+    "disallowMixedSpacesAndTabs": true,
+    "validateIndentation": 4,
+    "disallowMultipleSpaces": true,
+    "validateLineBreaks": "LF",
+
+    "requireSemicolons": true
+}
