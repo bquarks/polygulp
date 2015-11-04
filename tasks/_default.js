@@ -19,6 +19,8 @@ module.exports = function(gulp, config) {
             }))
             .pipe($.postcss(config.postcssProcessors))
             .pipe(gulp.dest(config.paths.tmp + '/' + stylesPath))
+            .pipe($.csslint('.csslintrc'))
+            .pipe($.csslint.reporter())            
             .pipe($.if('*.css', $.minifyCss()))
             .pipe(gulp.dest('dist/' + stylesPath))
             .pipe($.size({
