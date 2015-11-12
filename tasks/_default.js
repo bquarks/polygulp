@@ -10,6 +10,10 @@ module.exports = function(gulp, config) {
     var browserSync = require('browser-sync');
     var reload = browserSync.reload;
 
+    var dist = function(subpath) {
+        return !subpath ? config.paths.dist : path.join(config.paths.dist, subpath);
+    };
+
     var styleTask = function(stylesPath, srcs) {
         return gulp.src(srcs.map(function(src) {
                 return path.join(config.paths.app, stylesPath, src);
@@ -20,12 +24,22 @@ module.exports = function(gulp, config) {
             .pipe($.postcss(config.postcssProcessors))
             .pipe(gulp.dest(config.paths.tmp + '/' + stylesPath))
             .pipe($.csslint('.csslintrc'))
-            .pipe($.csslint.reporter())            
+            .pipe($.csslint.reporter())
             .pipe($.if('*.css', $.minifyCss()))
             .pipe(gulp.dest('dist/' + stylesPath))
             .pipe($.size({
                 title: stylesPath
             }));
+    };
+
+    var imageOptimizeTask = function(src, dest) {
+        return gulp.src(src)
+        .pipe($.imagemin({
+            progressive: true,
+            interlaced: true
+        }))
+        .pipe(gulp.dest(dest))
+        .pipe($.size({ title: 'images' }));
     };
 
     // Compile and Automatically Prefix Stylesheets
@@ -61,17 +75,10 @@ module.exports = function(gulp, config) {
 
     // Optimize Images
     gulp.task('images', function() {
-        return gulp.src(config.paths.app + '/assets/**/*')
-            .pipe($.cache($.imagemin({
-                progressive: true,
-                interlaced: true
-            })))
-            .pipe(gulp.dest(config.paths.dist + '/assets/'))
-            .pipe($.size({
-                title: 'images'
-            }));
+        return imageOptimizeTask(config.paths.app + '/assets/**/*', dist('assets'));
     });
 
+    // Generate SVGsprite
     gulp.task('svgsprite', function() {
         del.sync(config.paths.dist + '/assets/svg/sprite.svg');
         gulp.src(config.paths.app + '/assets/svg/sprite/*.svg')
