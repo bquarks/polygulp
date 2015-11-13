@@ -10,34 +10,23 @@ module.exports = function(gulp, config) {
     var browserSync = require('browser-sync');
     var reload = browserSync.reload;
 
-    var dist = function(subpath) {
-        return !subpath ? config.paths.dist : path.join(config.paths.dist, subpath);
-    };
-
     var styleTask = function(stylesPath, srcs) {
         return gulp.src(srcs.map(function(src) {
                 return path.join(config.paths.app, stylesPath, src);
             }))
-            .pipe($.changed(stylesPath, {
-                extension: '.css'
-            }))
+            .pipe($.changed(stylesPath, { extension: '.css' }))
             .pipe($.postcss(config.postcssProcessors))
             .pipe(gulp.dest(config.paths.tmp + '/' + stylesPath))
             .pipe($.csslint('.csslintrc'))
             .pipe($.csslint.reporter())
             .pipe($.if('*.css', $.minifyCss()))
-            .pipe(gulp.dest('dist/' + stylesPath))
-            .pipe($.size({
-                title: stylesPath
-            }));
+            .pipe(gulp.dest(config.findPath(stylesPath)))
+            .pipe($.size({ title: stylesPath }));
     };
 
     var imageOptimizeTask = function(src, dest) {
         return gulp.src(src)
-        .pipe($.imagemin({
-            progressive: true,
-            interlaced: true
-        }))
+        .pipe($.imagemin(config.optimize.image))
         .pipe(gulp.dest(dest))
         .pipe($.size({ title: 'images' }));
     };
@@ -75,21 +64,22 @@ module.exports = function(gulp, config) {
 
     // Optimize Images
     gulp.task('images', function() {
-        return imageOptimizeTask(config.paths.app + '/assets/**/*', dist('assets'));
+        return imageOptimizeTask(config.paths.app + '/assets/**/*', config.findPath('assets'));
     });
 
     // Generate SVGsprite
     gulp.task('svgsprite', function() {
         del.sync(config.paths.dist + '/assets/svg/sprite.svg');
         gulp.src(config.paths.app + '/assets/svg/sprite/*.svg')
+            .pipe($.svgmin())
             .pipe($.svgstore())
-            .pipe(gulp.dest(config.paths.dist + '/assets/svg'));
+            .pipe(gulp.dest(config.findPath('assets/svg')));
     });
 
     // Copy Web Fonts To Dist
     gulp.task('fonts', function() {
-        return gulp.src(['app/fonts/**'])
-            .pipe(gulp.dest('dist/fonts'))
+        return gulp.src([config.paths.app + '/assets/fonts/**'])
+            .pipe(gulp.dest(config.findPath('assets/fonts')))
             .pipe($.size({
                 title: 'fonts'
             }));

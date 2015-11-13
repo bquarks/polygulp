@@ -11,7 +11,7 @@ module.exports = function(gulp, config) {
     var historyApiFallback = require('connect-history-api-fallback');
 
     // Watch Files For Changes & Reload
-    gulp.task('serve', ['styles', 'elements', 'pages', 'images', 'svgsprite', '_translate'], function() {
+    gulp.task('serve', ['jshint', 'styles', 'elements', 'pages', 'images', '_translate'], function() {
         browserSync({
             notify: false,
             logPrefix: 'PSK',

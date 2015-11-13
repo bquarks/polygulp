@@ -7,15 +7,16 @@ module.exports = function(gulp, options) {
     var _ = require('underscore');
 
     // postcss plugins
-    var customMedia = require("postcss-custom-media");
+    var path = require('path');
+    var customMedia = require('postcss-custom-media');
     var nested = require('postcss-nested');
     var autoprefixer = require('autoprefixer');
     var extend = require('deep-extend');
-    var atImport = require("postcss-import");
+    var atImport = require('postcss-import');
 
     var defaults = {
         projectInfo: {
-            versionRegex: /(version\s?[=:]\s?)["']\d.{3,}['"]/g, //version: 0.0.0 || version = 0.0.0
+            versionRegex: /(version\s?[=:]\s?)["']\d.{3,}['"]/g, // version: 0.0.0 || version = 0.0.0
             versionFiles: [],
         },
         paths: {
@@ -43,8 +44,20 @@ module.exports = function(gulp, options) {
                 ]
             })
         ],
+        optimize: {
+            html: {
+                quotes: true,
+                empty: true,
+                spare: true
+            },
+            image: {
+                progressive: true,
+                interlaced: true
+            }
+        },
         vulcanize: {
-            stripComments: true,
+            implicitStrip: true,
+            stripComments: false,
             inlineCss: true,
             inlineScripts: true
         }
@@ -52,6 +65,11 @@ module.exports = function(gulp, options) {
 
     // Merge user settings with default config
     var config = extend({}, defaults, options);
+
+    // Get the correct dist path
+    config.findPath = function(subpath) {
+        return !subpath ? config.paths.dist : path.join(config.paths.dist, subpath);
+    };
 
     // Load tasks for web-component-tester
     // Adds tasks for `gulp test:local` and `gulp test:remote`

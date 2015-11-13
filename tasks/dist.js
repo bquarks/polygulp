@@ -19,56 +19,51 @@ module.exports = function(gulp, config) {
             '!app/precache.json'
         ], {
             dot: true
-        }).pipe(gulp.dest(config.paths.dist));
+        }).pipe(gulp.dest(config.findPath()));
 
         var bower = gulp.src([
             'bower_components/**/*'
-        ]).pipe(gulp.dest('dist/bower_components'));
+        ]).pipe(gulp.dest(config.findPath('bower_components')));
 
         var elements = gulp.src([config.paths.app + '/elements/**/*.html'])
-            .pipe(gulp.dest(config.paths.dist + '/elements'));
+            .pipe(gulp.dest(config.findPath('elements')));
 
         var scripts = gulp.src([config.paths.app + '/**/*.js'])
-            .pipe(gulp.dest(config.paths.dist));
+            .pipe(gulp.dest(config.findPath()));
 
-        var locales = gulp.src([config.paths.tmp + '/resources/locales/**/*'])
-            .pipe(gulp.dest(config.paths.dist + '/resources/locales/'));
-
-        var mocks = gulp.src([config.paths.app + '/resources/mocks/**/*'])
-            .pipe(gulp.dest(config.paths.dist + '/resources/mocks/'));
+        var resources = gulp.src([config.paths.tmp + '/resources/**/*'])
+            .pipe(gulp.dest(config.findPath('resources')));
 
         // var swToolbox = gulp.src(['bower_components/sw-toolbox/*.js'])
         //     .pipe(gulp.dest('dist/sw-toolbox'));
 
-        return merge(app, bower, elements, locales, mocks, scripts)
+        return merge(app, bower, elements, scripts, resources)
             .pipe($.size({
                 title: 'copy'
             }));
     });
 
     // Scan Your HTML For Assets & Optimize Them
-    gulp.task('usemin', function() {
+    gulp.task('html', function() {
         return gulp.src([config.paths.app + '/**/*.html', '!{test}/**/*.html'])
         .pipe($.usemin({
             css: [$.rev],
-            html: [function () { return $.minifyHtml({
-                    quotes: true,
-                    empty: true,
-                    spare: true
-                });
-            }],
+            html: [
+                function () {
+                    return $.minifyHtml(config.optimize.html);
+                }],
             js: [$.uglify, $.rev],
             inlinejs: [$.uglify],
             inlinecss: [$.minifyCss, 'concat']
         }))
-        .pipe(gulp.dest(config.paths.dist));
+        .pipe(gulp.dest(config.findPath()));
     });
 
     // Vulcanize imports
     gulp.task('vulcanize', function() {
         return gulp.src(config.paths.dist + '/main/imports.html')
             .pipe($.vulcanize(config.vulcanize))
-            .pipe(gulp.dest(config.paths.dist + '/main'))
+            .pipe(gulp.dest(config.findPath('main')))
             .pipe($.size({
                 title: 'vulcanize:imports'
             }));
@@ -80,13 +75,13 @@ module.exports = function(gulp, config) {
         var dir = config.paths.dist;
 
         glob('{elements,scripts,styles}/**/*.*', {
-            cwd: dir
+            cwd: config.paths.dist
         }, function(error, files) {
             if (error) {
                 callback(error);
             } else {
                 files.push('index.html', './', 'bower_components/webcomponentsjs/webcomponents-lite.min.js');
-                var filePath = path.join(dir, 'precache.json');
+                var filePath = path.join(config.paths.dist, 'precache.json');
                 fs.writeFile(filePath, JSON.stringify(files), callback);
             }
         });
@@ -95,7 +90,7 @@ module.exports = function(gulp, config) {
     // Build Production Files, the Default Task
     gulp.task('default', ['clean'], function(cb) {
         runSequence(
-            '_translate', ['copy', 'styles'], ['elements', 'pages'], ['jshint', 'images', 'svgsprite', 'fonts', 'usemin'],
+            '_translate', ['copy', 'styles'], ['elements', 'pages'], ['jshint', 'images', 'fonts', 'html'],
             'vulcanize',
             cb);
         // Note: add , 'precache' , after 'vulcanize', if your are going to use Service Worker
