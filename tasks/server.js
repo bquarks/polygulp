@@ -7,8 +7,7 @@ module.exports = function(gulp, config) {
     var $ = require('gulp-load-plugins')();
     var browserSync = require('browser-sync');
     var reload = browserSync.reload;
-    var del = require('del');
-    var historyApiFallback = require('connect-history-api-fallback');
+    // var historyApiFallback = require('connect-history-api-fallback');
 
     // Watch Files For Changes & Reload
     gulp.task('serve', ['jshint', 'styles', 'elements', 'pages', 'images', '_translate'], function() {
@@ -29,10 +28,7 @@ module.exports = function(gulp, config) {
         });
 
         gulp.watch([config.paths.app + '/**/*.html'], reload);
-        gulp.watch([config.paths.app + '/styles/**/*.css'], ['styles', reload]);
-        gulp.watch([config.paths.app + '/elements/**/*.css'], ['elements', reload]);
-        gulp.watch([config.paths.app + '/pages/**/*.css'], ['pages', reload]);
-        gulp.watch([config.paths.app + '/assets/images/**/*'], reload);
+        gulp.watch([config.paths.app + '/**/*.css'], ['styles', reload]);
         gulp.watch([config.paths.app + '/**/*.js'], ['jshint']);
     });
 

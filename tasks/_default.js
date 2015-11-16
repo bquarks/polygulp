@@ -16,7 +16,7 @@ module.exports = function(gulp, config) {
             }))
             .pipe($.changed(stylesPath, { extension: '.css' }))
             .pipe($.postcss(config.postcssProcessors))
-            .pipe(gulp.dest(config.paths.tmp + '/' + stylesPath))
+            .pipe(gulp.dest(config.paths.tmp + stylesPath))
             .pipe($.csslint('.csslintrc'))
             .pipe($.csslint.reporter())
             .pipe($.if('*.css', $.minifyCss()))
@@ -33,24 +33,13 @@ module.exports = function(gulp, config) {
 
     // Compile and Automatically Prefix Stylesheets
     gulp.task('styles', function() {
-        return styleTask('styles', ['**/*.css']);
-    });
-
-    gulp.task('elements', function() {
-        return styleTask('elements', ['**/*.css']);
-    });
-
-    gulp.task('pages', function() {
-        return styleTask('pages', ['**/*.css']);
+        return styleTask('/', ['**/*.css']);
     });
 
     // Lint JavaScript
     gulp.task('jshint', function() {
         return gulp.src([
-                config.paths.app + '/elements/**/*.js',
-                config.paths.app + '/pages/**/*.js',
-                config.paths.app + '/routes/**/*.js',
-                config.paths.app + '/main/**/*.js'
+                config.paths.app + '/**/*.js'
             ])
             .pipe(reload({
                 stream: true,

@@ -72,8 +72,6 @@ module.exports = function(gulp, config) {
     // Generate a list of files that should be precached when serving from 'dist'.
     // The list will be consumed by the <platinum-sw-cache> element.
     gulp.task('precache', function(callback) {
-        var dir = config.paths.dist;
-
         glob('{elements,scripts,styles}/**/*.*', {
             cwd: config.paths.dist
         }, function(error, files) {
@@ -90,7 +88,7 @@ module.exports = function(gulp, config) {
     // Build Production Files, the Default Task
     gulp.task('default', ['clean'], function(cb) {
         runSequence(
-            '_translate', ['copy', 'styles'], ['elements', 'pages'], ['jshint', 'images', 'fonts', 'html'],
+            '_translate', ['copy', 'styles'], ['jshint', 'images', 'fonts', 'html'],
             'vulcanize',
             cb);
         // Note: add , 'precache' , after 'vulcanize', if your are going to use Service Worker
