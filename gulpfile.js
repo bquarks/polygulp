@@ -52,7 +52,10 @@ module.exports = function(gulp, options) {
             },
             image: {
                 progressive: true,
-                interlaced: true
+                interlaced: true,
+                svgoPlugins: [
+                    { collapseGroups: false }
+                ]
             }
         },
         vulcanize: {
