@@ -34,10 +34,13 @@ module.exports = function(gulp, config) {
         var resources = gulp.src([config.paths.app + '/resources/**/*'])
             .pipe(gulp.dest(config.findPath('resources')));
 
+        var locales = gulp.src([config.paths.tmp + '/resources/locales/**/*'])
+            .pipe(gulp.dest(config.findPath('resources/locales')));
+
         // var swToolbox = gulp.src(['bower_components/sw-toolbox/*.js'])
         //     .pipe(gulp.dest('dist/sw-toolbox'));
 
-        return merge(app, bower, elements, scripts, resources)
+        return merge(app, bower, elements, scripts, resources, locales)
             .pipe($.size({
                 title: 'copy'
             }));
