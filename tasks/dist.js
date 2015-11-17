@@ -31,7 +31,7 @@ module.exports = function(gulp, config) {
         var scripts = gulp.src([config.paths.app + '/**/*.js'])
             .pipe(gulp.dest(config.findPath()));
 
-        var resources = gulp.src([config.paths.tmp + '/resources/**/*'])
+        var resources = gulp.src([config.paths.app + '/resources/**/*'])
             .pipe(gulp.dest(config.findPath('resources')));
 
         // var swToolbox = gulp.src(['bower_components/sw-toolbox/*.js'])
