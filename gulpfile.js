@@ -48,7 +48,8 @@ module.exports = function(gulp, options) {
             html: {
                 quotes: true,
                 empty: true,
-                spare: true
+                spare: true,
+                loose: true
             },
             image: {
                 progressive: true,
