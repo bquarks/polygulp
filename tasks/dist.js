@@ -48,7 +48,7 @@ module.exports = function(gulp, config) {
 
     // Scan Your HTML For Assets & Optimize Them
     gulp.task('html', function() {
-        return gulp.src([config.paths.app + '/**/*.html', '!{test}/**/*.html'])
+        return gulp.src([config.paths.app + '/**/*.html', '!' + config.paths.app + '/assets{,/**}/*.html'])
         .pipe($.usemin({
             css: [$.rev],
             html: [

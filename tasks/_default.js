@@ -17,8 +17,6 @@ module.exports = function(gulp, config) {
             .pipe($.changed(stylesPath, { extension: '.css' }))
             .pipe($.postcss(config.postcssProcessors))
             .pipe(gulp.dest(config.paths.tmp + stylesPath))
-            .pipe($.csslint('.csslintrc'))
-            .pipe($.csslint.reporter())
             .pipe($.if('*.css', $.minifyCss()))
             .pipe(gulp.dest(config.findPath(stylesPath)))
             .pipe($.size({ title: stylesPath }));

@@ -1,6 +1,6 @@
 {
   "name": "polygulp",
-  "version": "0.3.5",
+  "version": "0.3.7",
   "description": "Indirect Gulpfile for Polymer projects",
   "main": "gulpfile.js",
   "repository": {
@@ -35,7 +35,6 @@
     "gulp-bump": "0.3.1",
     "gulp-cache": "0.2.8",
     "gulp-changed": "1.0.0",
-    "gulp-csslint": "0.2.0",
     "gulp-git": "1.2.4",
     "gulp-if": "1.2.5",
     "gulp-imagemin": "2.3.0",
