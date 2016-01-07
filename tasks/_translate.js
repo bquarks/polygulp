@@ -24,12 +24,12 @@ module.exports = function(gulp, config) {
     };
 
     var pluralKeys = {
-        zero: 'message_plural_0',
-        one: 'message',
-        two: 'message_plural_2',
-        few: 'message_plural_3',
-        many: 'message_plural',
-        other: 'message_plural_indefinite'
+        zero: '_plural_0',
+        one: '',
+        two: '_plural_2',
+        few: '_plural_3',
+        many: '_plural',
+        other: '_plural_indefinite'
 
     };
 
@@ -39,18 +39,18 @@ module.exports = function(gulp, config) {
         var splittedTerm = term.split('_');
         var parsedTerm = {
             key: term,
-            value: {}
+            value: ''
         };
 
         if (!_.has(pluralKeys, _.last(splittedTerm))){
-            parsedTerm.value.message = definition;
+            parsedTerm.value = definition;
             return parsedTerm;
         }
 
-        parsedTermKey = term.replace('_' + _.last(splittedTerm), '');
         pluralKey = pluralKeys[_.last(splittedTerm)];
+        parsedTermKey = term.replace('_' + _.last(splittedTerm), '') + pluralKey;
         parsedTerm.key = parsedTermKey;
-        parsedTerm.value[pluralKey] = definition;
+        parsedTerm.value = definition;
 
         return parsedTerm;
     };
