@@ -62,8 +62,8 @@ module.exports = function(gulp, options) {
         vulcanize: {
             implicitStrip: true,
             stripComments: false,
-            inlineCss: true,
-            inlineScripts: true
+            inlineCss: false,
+            inlineScripts: false
         }
     };
 
