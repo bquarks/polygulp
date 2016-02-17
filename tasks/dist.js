@@ -9,6 +9,9 @@ module.exports = function(gulp, config) {
     var path = require('path');
     var glob = require('glob');
     var fs = require('fs');
+    var replace = require('gulp-replace');
+    var lazypipe = require('lazypipe');
+    //var polyclean = require('polyclean');
     var runSequence = require('run-sequence').use(gulp);
 
     // Copy All Files At The Root Level (app)
@@ -49,23 +52,34 @@ module.exports = function(gulp, config) {
     // Scan Your HTML For Assets & Optimize Them
     gulp.task('html', function() {
         return gulp.src([config.paths.app + '/**/*.html', '!' + config.paths.app + '/assets{,/**}/*.html'])
-        .pipe($.usemin({
-            css: [$.rev],
-            html: [
-                function () {
-                    return $.minifyHtml(config.optimize.html);
-                }],
-            js: [$.uglify, $.rev],
-            inlinejs: [$.uglify],
-            inlinecss: [$.minifyCss, 'concat']
-        }))
-        .pipe(gulp.dest(config.findPath()));
+            .pipe($.usemin({
+                css: [$.rev],
+                html: [
+
+                    function() {
+                        return $.minifyHtml(config.optimize.html);
+                    }
+                ],
+                js: [$.uglify, $.rev],
+                inlinejs: [$.uglify],
+                inlinecss: [$.minifyCss, 'concat']
+            }))
+            .pipe(gulp.dest(config.findPath()));
     });
 
     // Vulcanize imports
     gulp.task('vulcanize', function() {
+
+        var cleanupPipe = lazypipe()
+            //.pipe(polyclean.cleanCss)
+            //.pipe(polyclean.leftAlignJs)
+            //.pipe(polyclean.cleanJsComments)
+            //.pipe(polyclean.uglifyJs)
+            .pipe(replace, 'hidden="" by-vulcanize=""', '');
+
         return gulp.src(config.paths.dist + '/main/imports.html')
             .pipe($.vulcanize(config.vulcanize))
+            .pipe(cleanupPipe())
             .pipe(gulp.dest(config.findPath('main')))
             .pipe($.size({
                 title: 'vulcanize:imports'
