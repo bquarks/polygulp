@@ -1,6 +1,6 @@
 {
     "name": "polygulp",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "description": "Indirect Gulpfile for Polymer projects",
     "main": "gulpfile.js",
     "repository": {
