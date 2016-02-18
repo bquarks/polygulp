@@ -11,7 +11,7 @@ module.exports = function(gulp, config) {
     var fs = require('fs');
     var replace = require('gulp-replace');
     var lazypipe = require('lazypipe');
-    //var polyclean = require('polyclean');
+    var polyclean = require('polyclean');
     var runSequence = require('run-sequence').use(gulp);
 
     // Copy All Files At The Root Level (app)
@@ -71,10 +71,9 @@ module.exports = function(gulp, config) {
     gulp.task('vulcanize', function() {
 
         var cleanupPipe = lazypipe()
-            //.pipe(polyclean.cleanCss)
-            //.pipe(polyclean.leftAlignJs)
-            //.pipe(polyclean.cleanJsComments)
-            //.pipe(polyclean.uglifyJs)
+            .pipe(polyclean.cleanCss)
+            .pipe(polyclean.leftAlignJs)
+            .pipe(polyclean.uglifyJs)
             .pipe(replace, 'hidden="" by-vulcanize=""', '');
 
         return gulp.src(config.paths.dist + '/main/imports.html')
