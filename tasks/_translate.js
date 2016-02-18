@@ -165,16 +165,16 @@ module.exports = function(gulp, config) {
         var js = 'window.app = window.app || {}; ';
         js = js + 'window.app.routes = window.app.routes || {}; ';
 
-        if (!routesStruc) {
-            return;
-        }
-
         _.each(routesStruc, function(pathStruc, route) {
             routes[route] = createRoute(langBundles, pathStruc);
         });
 
         js = js + 'window.app.routes = ';
         js = js + JSON.stringify(routes) + ';';
+
+        // Create routes.js
+        // JSONP file with all the routes ready to use in steroid-polyter/page.js
+        // Stored in app.routes
         fs.writeFile(projectConfigDir + '/routes.js', js);
 
         return routes;
@@ -198,11 +198,17 @@ module.exports = function(gulp, config) {
             js = js + 'window.app.locales["' + name + '"] = ';
             js = js + json + ';';
 
+            // Create json files for every language bundle
             fs.writeFile(localesDir + '/' + name + '.json', json);
         });
 
-        routes = createRoutes(langBundles);
+        if (projectConfig.config && projectConfig.config.routes) {
+            routes = createRoutes(langBundles);
+        }
 
+        // Create locales.js 
+        // JSONP file with all language bundles provided
+        // Stored in app.locales
         fs.writeFile(localesDir + '/locales.js', js);
 
     });
