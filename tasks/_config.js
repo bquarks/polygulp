@@ -9,6 +9,7 @@ Features:                                                                       
      - app.common.config.backend                                                   *
      - app.common.config.webfs                                                     *
      - app.common.config.analyticsID                                               *
+     - app.common.config.compatibility                                            *
 - Extend default config.json with env config.json                                  *
                                                                                    *
 Project configuration:                                                             *
@@ -115,13 +116,12 @@ module.exports = function(gulp, config) {
      * @return {String}         Stringified js snippet with app.common.config.backend
      */
     var buildBackendConfig = function(options) {
-        var extension = {};
-        var backendConfig = options.backend;
+        var backendConfig = _.clone(options.backend);
         var endpoints = buildEndpoints(backendConfig.endpoints, backendConfig.domain, backendConfig.version);
 
         backendConfig.endpoints = endpoints;
 
-        return addToConfig(options, 'backend', extension);
+        return addToConfig(options, 'backend', backendConfig);
     };
 
     /**
@@ -144,6 +144,7 @@ module.exports = function(gulp, config) {
         var paramConfig = options[param];
 
         if (extension) {
+            paramConfig = _.clone(paramConfig);
             _.extend(paramConfig, extension);
         }
 
@@ -172,10 +173,11 @@ module.exports = function(gulp, config) {
         // Build webfs config
         js = js + addToConfig(options, 'webfs');
 
-        // Add appName, version, clientType, analyticsID
+        // Add appName, version, clientType, compatibility, analyticsID
         js = js + addToConfig(options, 'appName');
         js = js + addToConfig(options, 'version');
         js = js + addToConfig(options, 'clientType');
+        js = js + addToConfig(options, 'compatibility');
         js = js + addToConfig(options, 'analyticsID');
 
         return js;
@@ -220,7 +222,7 @@ module.exports = function(gulp, config) {
         var config = createConfig(projectConfig.config);
 
         initDirs();
-
+        
         // Create config.js tmp file
         // Adds or modify app namespace
         // Access to the custom config in app.common.config
