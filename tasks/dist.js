@@ -62,7 +62,7 @@ module.exports = function(gulp, config) {
                 ],
                 js: [$.uglify, $.rev],
                 inlinejs: [$.uglify],
-                inlinecss: [$.minifyCss, 'concat']
+                inlinecss: [$.cleanCss, 'concat']
             }))
             .pipe(gulp.dest(config.findPath()));
     });
