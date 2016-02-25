@@ -104,7 +104,7 @@ module.exports = function(gulp, config) {
     // Build Production Files, the Default Task
     gulp.task('default', ['clean'], function(cb) {
         runSequence(
-            '_translate', '_config', ['copy', 'styles'], ['jshint', 'images', 'fonts', 'html'],
+            '_translate', '_environment', ['copy', 'styles'], ['jshint', 'images', 'fonts', 'html'],
             'vulcanize',
             cb);
         // Note: add , 'precache' , after 'vulcanize', if your are going to use Service Worker

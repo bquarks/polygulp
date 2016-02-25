@@ -10,7 +10,7 @@ module.exports = function(gulp, config) {
     // var historyApiFallback = require('connect-history-api-fallback');
 
     // Watch Files For Changes & Reload
-    gulp.task('serve', ['jshint', 'styles', '_translate', '_config'], function() {
+    gulp.task('serve', ['jshint', 'styles', '_translate', '_environment'], function() {
         browserSync({
             notify: false,
             logPrefix: 'PSK',
@@ -30,7 +30,7 @@ module.exports = function(gulp, config) {
         gulp.watch([config.paths.app + '/**/*.html'], reload);
         gulp.watch([config.paths.app + '/**/*.css'], ['styles', reload]);
         gulp.watch([config.paths.app + '/**/*.js'], ['jshint']);
-        gulp.watch([config.paths.app + '/resources/config/**/*.json'], ['_config', reload]);
+        gulp.watch([config.paths.app + '/resources/config/**/*.json'], ['_environment', reload]);
     });
 
     // Build and serve the output from the dist build

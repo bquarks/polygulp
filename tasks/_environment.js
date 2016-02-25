@@ -211,7 +211,7 @@ module.exports = function(gulp, config) {
         });
     };
 
-    gulp.task('_config', function() {
+    gulp.task('_environment', function() {
         if (!projectConfig.config) {
             configLog.error('No config.json provided');
             return;
@@ -222,7 +222,7 @@ module.exports = function(gulp, config) {
         var config = createConfig(projectConfig.config);
 
         initDirs();
-        
+
         // Create config.js tmp file
         // Adds or modify app namespace
         // Access to the custom config in app.common.config
