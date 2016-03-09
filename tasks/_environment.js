@@ -29,14 +29,19 @@ module.exports = function(gulp, config) {
     var _ = require('underscore');
     var fs = require('fs');
     var mkdirp = require('mkdirp');
+    var argv = require('yargs').argv;
 
     var projectConfig = requireDir(path.resolve(config.paths.app + '/resources/config'));
     var projectConfigDir = path.resolve(config.paths.tmp + '/resources/config');
     var buildEnv;
 
-    if (process && process.env) {
+    if (argv.environment) {
+        buildEnv = argv.environment;
+    }
+    else if (process && process.env) {
         buildEnv = process.env.environment || process.env.NODE_ENV;
     }
+
 
     var initDirs = function() {
         mkdirp.sync(projectConfigDir);
