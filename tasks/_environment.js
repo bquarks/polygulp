@@ -147,6 +147,7 @@ module.exports = function(gulp, config) {
                 appId: options.smartBanner.id
             }).then(function(res) {
                 var smartBannerConfig = {
+                    extractedFromPlayStore: res,
                     title: res.title,
                     author: res.developer
                 };
