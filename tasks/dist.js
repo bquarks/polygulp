@@ -13,6 +13,7 @@ module.exports = function(gulp, config) {
     var lazypipe = require('lazypipe');
     var polyclean = require('polyclean');
     var runSequence = require('run-sequence').use(gulp);
+    var stripDebug = require('gulp-strip-debug');
 
     // Copy All Files At The Root Level (app)
     gulp.task('copy', function() {
@@ -32,6 +33,7 @@ module.exports = function(gulp, config) {
             .pipe(gulp.dest(config.findPath('elements')));
 
         var scripts = gulp.src([config.paths.app + '/**/*.js'])
+            .pipe(stripDebug())
             .pipe(gulp.dest(config.findPath()));
 
         var resources = gulp.src([config.paths.app + '/resources/**/*'])
