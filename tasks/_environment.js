@@ -30,6 +30,7 @@ module.exports = function(gulp, config) {
     var fs = require('fs');
     var mkdirp = require('mkdirp');
     var argv = require('yargs').argv;
+    var playScraper = require('google-play-scraper');
 
     var projectConfig = requireDir(path.resolve(config.paths.app + '/resources/config'));
     var projectConfigDir = path.resolve(config.paths.tmp + '/resources/config');
@@ -37,11 +38,9 @@ module.exports = function(gulp, config) {
 
     if (argv.environment) {
         buildEnv = argv.environment;
-    }
-    else if (process && process.env) {
+    } else if (process && process.env) {
         buildEnv = process.env.environment || process.env.NODE_ENV;
     }
-
 
     var initDirs = function() {
         mkdirp.sync(projectConfigDir);
@@ -130,6 +129,40 @@ module.exports = function(gulp, config) {
     };
 
     /**
+     * Build smart banner config extracted from play store
+     * @method function
+     * @param  {Object} options
+     * @return {Object}         Promise resolved with a stringified snippet with app.common.config.smartBanner
+     */
+    var buildSmartBannerConfig = function(options) {
+        var playScraperPromise = new Promise(function(resolve, reject) {
+            if (!options.smartBanner) {
+                var errorText = 'No smartBanner config provided';
+                configLog.warning(errorText);
+                reject(errorText);
+                return;
+            }
+
+            playScraper.app({
+                appId: options.smartBanner.id
+            }).then(function(res) {
+                var smartBannerConfig = {
+                    title: res.title,
+                    author: res.developer
+                };
+
+                var js = addToConfig(options, 'smartBanner', smartBannerConfig);
+
+                resolve(js);
+            }).catch(function(err) {
+                reject(err);
+            });
+        });
+
+        return playScraperPromise;
+    };
+
+    /**
      * Creates a new js snippet wich modify a param in app.common.config
      * Optionally, if the param to modify is an object you can extend it
      * @method function
@@ -141,7 +174,7 @@ module.exports = function(gulp, config) {
     var addToConfig = function(options, param, extension) {
 
         if (!options[param]) {
-            configLog.warning('No' + param + 'config provided');
+            configLog.warning('No ' + param + ' config provided');
             return '';
         }
 
@@ -149,8 +182,12 @@ module.exports = function(gulp, config) {
         var paramConfig = options[param];
 
         if (extension) {
-            paramConfig = _.clone(paramConfig);
-            _.extend(paramConfig, extension);
+            if (_.isObject(paramConfig)) {
+                paramConfig = _.clone(paramConfig);
+                _.extend(paramConfig, extension);
+            } else {
+                paramConfig = extension;
+            }
         }
 
         js = js + JSON.stringify(paramConfig) + '; ';
@@ -162,9 +199,11 @@ module.exports = function(gulp, config) {
      * Creates a js snippet wich adds or modifies app.common.config
      * @method function
      * @param  {Object} options
-     * @return {String}         Stringified js snippet
+     * @return {Object}         Promise resolved with a stringified js snippet
      */
     var createConfig = function(options) {
+        var configPromise;
+        var inmediateConfig;
         var js = 'window.app = window.app || {}; ';
         js = js + 'window.app.common = window.app.common || {}; ';
         js = js + 'window.app.common.config = window.app.common.config || {}; ';
@@ -172,20 +211,33 @@ module.exports = function(gulp, config) {
         // Set debug mode
         configLog.debug = (options.debug === 'true');
 
+        // Add appName, version, clientType, compatibility, analyticsID
+        inmediateConfig = ['appName', 'version', 'clientType', 'compatibility', 'analyticsID'];
+
+        for (var i in inmediateConfig) {
+            js = js + addToConfig(options, inmediateConfig[i]);
+        }
+
         // Build backend config
         js = js + buildBackendConfig(options);
 
         // Build webfs config
         js = js + addToConfig(options, 'webfs');
 
-        // Add appName, version, clientType, compatibility, analyticsID
-        js = js + addToConfig(options, 'appName');
-        js = js + addToConfig(options, 'version');
-        js = js + addToConfig(options, 'clientType');
-        js = js + addToConfig(options, 'compatibility');
-        js = js + addToConfig(options, 'analyticsID');
+        // Build smartBanner config
+        configPromise = new Promise(function(resolve) {
+            buildSmartBannerConfig(options)
+                .then(function(res) {
+                    js = js + res;
+                    resolve(js);
+                })
+                .catch(function(err) {
+                    configLog.error('SmartBanner config error: ' + err);
+                    resolve(js);
+                });
+        });
 
-        return js;
+        return configPromise;
     };
 
     /**
@@ -201,8 +253,7 @@ module.exports = function(gulp, config) {
             Object.keys(projectEnvConfig.config);
             projectEnvConfig = projectEnvConfig.config;
             configLog.info('Using ' + buildEnv + ' config.json');
-        }
-        catch (err) {
+        } catch (err) {
             if (err.code !== 'ENOENT') {
                 // Provide feedback when env file exists but it has errors (e.g. Syntax Error)
                 configLog.error('Error in ' + buildEnv + ' config.json: ' + err);
@@ -231,7 +282,9 @@ module.exports = function(gulp, config) {
         // Create config.js tmp file
         // Adds or modify app namespace
         // Access to the custom config in app.common.config
-        fs.writeFile(projectConfigDir + '/config.js', config);
+        config.then(function(res) {
+            fs.writeFile(projectConfigDir + '/config.js', res);
+        });
 
     });
 
