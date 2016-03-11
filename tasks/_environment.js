@@ -9,7 +9,8 @@ Features:                                                                       
      - app.common.config.backend                                                   *
      - app.common.config.webfs                                                     *
      - app.common.config.analyticsID                                               *
-     - app.common.config.compatibility                                            *
+     - app.common.config.compatibility                                             *
+     - app.common.config.smartBanner                                               *
 - Extend default config.json with env config.json                                  *
                                                                                    *
 Project configuration:                                                             *
@@ -250,7 +251,7 @@ module.exports = function(gulp, config) {
 
         try {
             projectEnvConfig = requireDir(path.resolve(config.paths.app + '/resources/config/' + buildEnv));
-            // Try to access config object to test if config.json exists
+            // Try to access config object to check if config.json exists
             Object.keys(projectEnvConfig.config);
             projectEnvConfig = projectEnvConfig.config;
             configLog.info('Using ' + buildEnv + ' config.json');
