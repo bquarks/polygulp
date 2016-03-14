@@ -44,6 +44,27 @@ module.exports = function(gulp, config) {
         buildEnv = process.env.environment || process.env.NODE_ENV;
     }
 
+    /**
+     * Check if exits url options (urlBase, domain and/or version)
+     * provided by console and return them
+     * @method function
+     * @return {Object} url options
+     */
+    var _customUrl = function() {
+        var backendCustomOptions = {};
+
+        var checkOptions = ['urlBase', 'domain', 'version'];
+
+        for (var i in checkOptions) {
+            if (argv[checkOptions[i]]) {
+                backendCustomOptions[checkOptions[i]] = argv[checkOptions[i]];
+                configLog.info('Using custom ' + checkOptions[i] + ': ' + argv[checkOptions[i]]);
+            }
+        }
+
+        return backendCustomOptions;
+    };
+
     var initDirs = function() {
         mkdirp.sync(projectConfigDir);
     };
@@ -123,6 +144,9 @@ module.exports = function(gulp, config) {
      */
     var buildBackendConfig = function(options) {
         var backendConfig = _.clone(options.backend);
+
+        _.extend(backendConfig, _customUrl());
+
         var endpoints = buildEndpoints(backendConfig.endpoints, backendConfig.domain, backendConfig.version);
 
         backendConfig.endpoints = endpoints;
