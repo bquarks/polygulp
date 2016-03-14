@@ -51,14 +51,19 @@ module.exports = function(gulp, config) {
      * @return {Object} url options
      */
     var _customUrl = function() {
+
+        if (!argv.endpoint) {
+            return {};
+        }
+
         var backendCustomOptions = {};
 
         var checkOptions = ['urlBase', 'domain', 'version'];
 
         for (var i in checkOptions) {
-            if (argv[checkOptions[i]]) {
-                backendCustomOptions[checkOptions[i]] = argv[checkOptions[i]];
-                configLog.info('Using custom ' + checkOptions[i] + ': ' + argv[checkOptions[i]]);
+            if (argv.endpoint[checkOptions[i]]) {
+                backendCustomOptions[checkOptions[i]] = argv.endpoint[checkOptions[i]];
+                configLog.info('Using custom ' + checkOptions[i] + ': ' + argv.endpoint[checkOptions[i]]);
             }
         }
 
