@@ -32,6 +32,7 @@ module.exports = function(gulp, config) {
     var mkdirp = require('mkdirp');
     var argv = require('yargs').argv;
     var playScraper = require('google-play-scraper');
+    var Download = require('download');
 
     var projectConfig = requireDir(path.resolve(config.paths.app + '/resources/config'));
     var projectConfigDir = path.resolve(config.paths.tmp + '/resources/config');
@@ -153,6 +154,15 @@ module.exports = function(gulp, config) {
                     author: res.developer
                 };
 
+                if (res.icon) {
+                    Download().get('https:' + res.icon)
+                    .dest(config.paths.dist + '/assets/png')
+                    .rename('ps-smart-banner.png')
+                    .run(function(err) {
+                        configLog.warning(err);
+                    });
+                }
+
                 var js = addToConfig(options, 'smartBanner', smartBannerConfig);
 
                 resolve(js);
@@ -234,7 +244,7 @@ module.exports = function(gulp, config) {
                     resolve(js);
                 })
                 .catch(function(err) {
-                    configLog.error('SmartBanner config error: ' + err);
+                    configLog.warning('SmartBanner config error: ' + err);
                     resolve(js);
                 });
         });
