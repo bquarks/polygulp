@@ -30,7 +30,7 @@
         "connect-history-api-fallback": "1.1.0",
         "deep-extend": "0.4.0",
         "del": "1.1.1",
-	"download": "4.4.3",
+		"download": "4.4.3",
         "glob": "5.0.6",
         "google-play-scraper": "0.3.0",
         "gulp-awspublish": "2.0.2",
