@@ -183,7 +183,9 @@ module.exports = function(gulp, config) {
                     .dest(config.paths.dist + '/assets/png')
                     .rename('ps-smart-banner.png')
                     .run(function(err) {
-                        configLog.warning(err);
+                        if (err) {
+                            configLog.warning('Error downloading smart banner icon: ' + err);
+                        }
                     });
                 }
 
