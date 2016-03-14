@@ -46,24 +46,25 @@ module.exports = function(gulp, config) {
 
     /**
      * Check if exits url options (urlBase, domain and/or version)
-     * provided by console and return them
+     * provided by command line or env variable and return them
      * @method function
      * @return {Object} url options
      */
     var _customUrl = function() {
 
-        if (!argv.endpoint) {
+        if (!argv.endpoint &&
+            (!process.env || !process.env.endpoint)) {
             return {};
         }
 
+        var endpointOptions = argv.endpoint || process.env.endpoint;
         var backendCustomOptions = {};
-
         var checkOptions = ['urlBase', 'domain', 'version'];
 
         for (var i in checkOptions) {
-            if (argv.endpoint[checkOptions[i]]) {
-                backendCustomOptions[checkOptions[i]] = argv.endpoint[checkOptions[i]];
-                configLog.info('Using custom ' + checkOptions[i] + ': ' + argv.endpoint[checkOptions[i]]);
+            if (endpointOptions[checkOptions[i]]) {
+                backendCustomOptions[checkOptions[i]] = endpointOptions[checkOptions[i]];
+                configLog.info('Using custom ' + checkOptions[i] + ': ' + endpointOptions[checkOptions[i]]);
             }
         }
 
