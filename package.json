@@ -26,6 +26,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "autoprefixer": "5.2.0",
+        "base64-js": "1.1.1",
         "browser-sync": "2.9.11",
         "connect-history-api-fallback": "1.1.0",
         "deep-extend": "0.4.0",
