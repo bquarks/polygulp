@@ -33,6 +33,7 @@ module.exports = function(gulp, config) {
     var argv = require('yargs').argv;
     var playScraper = require('google-play-scraper');
     var Download = require('download');
+    var base64 = require('base64-js');
 
     var projectConfig = requireDir(path.resolve(config.paths.app + '/resources/config'));
     var projectConfigDir = path.resolve(config.paths.tmp + '/resources/config');
@@ -178,6 +179,7 @@ module.exports = function(gulp, config) {
             playScraper.app({
                 appId: options.smartBanner.id
             }).then(function(res) {
+                var js;
                 var smartBannerConfig = {
                     extractedFromPlayStore: res,
                     title: res.title,
@@ -186,16 +188,26 @@ module.exports = function(gulp, config) {
 
                 if (res.icon) {
                     Download().get('https:' + res.icon)
-                    .dest(config.paths.dist + '/assets/png')
-                    .rename('ps-smart-banner.png')
-                    .run(function(err) {
+                    .run(function(err, files) {
+
+                        if (files && files[0]){
+                            var imageConverted = base64.fromByteArray(files[0].contents);
+                            smartBannerConfig.image = imageConverted;
+                        }
+
                         if (err) {
                             configLog.warning('Error downloading smart banner icon: ' + err);
                         }
+
+                        js = addToConfig(options, 'smartBanner', smartBannerConfig);
+                        resolve(js);
+
                     });
+
+                    return;
                 }
 
-                var js = addToConfig(options, 'smartBanner', smartBannerConfig);
+                js = addToConfig(options, 'smartBanner', smartBannerConfig);
 
                 resolve(js);
             }).catch(function(err) {
