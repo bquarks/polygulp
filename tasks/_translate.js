@@ -5,6 +5,7 @@ module.exports = function(gulp, config) {
 
     'use strict';
 
+    var gutil = require('gulp-util');
     var requireDir = require('require-dir');
     var path = require('path');
     var _ = require('underscore');
@@ -184,12 +185,24 @@ module.exports = function(gulp, config) {
         var langBundles = {};
         var langBundle;
         var routes;
+        var localesBlacklist;
         var json;
         var js = 'window.app = window.app || {}; ';
         js = js + 'window.app.locales = window.app.locales || {}; ';
 
         initDirs();
+
+        if (projectConfig.config && projectConfig.config.localesBlacklist) {
+            localesBlacklist = projectConfig.config.localesBlacklist;
+        }
+
         _.each(translations, function(lang, name) {
+            if (_.contains(localesBlacklist, name)) {
+                var message = name + ' locales were excluded due to config.json blacklist';
+                gutil.log('_translate', gutil.colors.blue(message));
+                return;
+            }
+
             langBundle = parseLang(lang);
             langBundles[name] = langBundle;
 
@@ -206,7 +219,7 @@ module.exports = function(gulp, config) {
             routes = createRoutes(langBundles);
         }
 
-        // Create locales.js 
+        // Create locales.js
         // JSONP file with all language bundles provided
         // Stored in app.locales
         fs.writeFile(localesDir + '/locales.js', js);
