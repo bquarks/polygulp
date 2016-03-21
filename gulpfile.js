@@ -75,6 +75,11 @@ module.exports = function(gulp, options) {
         return !subpath ? config.paths.dist : path.join(config.paths.dist, subpath);
     };
 
+    // Get the correct tmp path
+    config.findPathTmp = function(subpath) {
+        return !subpath ? config.paths.tmp : path.join(config.paths.tmp, subpath);
+    };
+
     // Load tasks for web-component-tester
     // Adds tasks for `gulp test:local` and `gulp test:remote`
     // require('web-component-tester').gulp.init(gulp);

@@ -37,10 +37,10 @@ module.exports = function(gulp, config) {
             .pipe(gulp.dest(config.findPath()));
 
         var resources = gulp.src([config.paths.app + '/resources/**/*'])
-            .pipe(gulp.dest(config.findPath('resources')));
+            .pipe(gulp.dest(config.findPathTmp('resources')));
 
         var locales = gulp.src([config.paths.tmp + '/resources/locales/**/*'])
-            .pipe(gulp.dest(config.findPath('resources/locales')));
+            .pipe(gulp.dest(config.findPathTmp('resources/locales')));
 
         // var swToolbox = gulp.src(['bower_components/sw-toolbox/*.js'])
         //     .pipe(gulp.dest('dist/sw-toolbox'));
