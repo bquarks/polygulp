@@ -14,6 +14,8 @@ module.exports = function(gulp, config) {
     var polyclean = require('polyclean');
     var runSequence = require('run-sequence').use(gulp);
     var stripDebug = require('gulp-strip-debug');
+    var projectConfig = requireDir(path.resolve(config.paths.app + '/resources/config'));
+    var isDebug = projectConfig.config.debug === 'true';
 
     // Copy All Files At The Root Level (app)
     gulp.task('copy', function() {
@@ -32,9 +34,11 @@ module.exports = function(gulp, config) {
         var elements = gulp.src([config.paths.app + '/elements/**/*.html'])
             .pipe(gulp.dest(config.findPath('elements')));
 
-        var scripts = gulp.src([config.paths.app + '/**/*.js'])
-            .pipe(stripDebug())
-            .pipe(gulp.dest(config.findPath()));
+        var scripts = gulp.src([config.paths.app + '/**/*.js']);
+            if (!isDebug) {
+                scripts = scripts.pipe(stripDebug());
+            }
+            scripts = scripts.pipe(gulp.dest(config.findPath()));
 
         var resources = gulp.src([config.paths.app + '/resources/**/*'])
             .pipe(gulp.dest(config.findPathTmp('resources')));
