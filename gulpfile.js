@@ -76,8 +76,8 @@ module.exports = function(gulp, options) {
     };
 
     // Get the correct tmp path
-    config.findPathTmp = function(subpath) {
-        return !subpath ? config.paths.tmp : path.join(config.paths.tmp, subpath);
+    config.findTmpPath = function(subpath) {
+        return subpath ? path.join(config.paths.tmp, subpath) : config.paths.tmp;
     };
 
     // Load tasks for web-component-tester
