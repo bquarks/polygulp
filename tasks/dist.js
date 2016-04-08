@@ -5,6 +5,7 @@ module.exports = function(gulp, config) {
     'use strict';
 
     var $ = require('gulp-load-plugins')();
+    var requireDir = require('require-dir');
     var merge = require('merge-stream');
     var path = require('path');
     var glob = require('glob');
@@ -41,10 +42,10 @@ module.exports = function(gulp, config) {
             scripts = scripts.pipe(gulp.dest(config.findPath()));
 
         var resources = gulp.src([config.paths.app + '/resources/**/*'])
-            .pipe(gulp.dest(config.findPathTmp('resources')));
+            .pipe(gulp.dest(config.findTmpPath('resources')));
 
         var locales = gulp.src([config.paths.tmp + '/resources/locales/**/*'])
-            .pipe(gulp.dest(config.findPathTmp('resources/locales')));
+            .pipe(gulp.dest(config.findTmpPath('resources/locales')));
 
         // var swToolbox = gulp.src(['bower_components/sw-toolbox/*.js'])
         //     .pipe(gulp.dest('dist/sw-toolbox'));
