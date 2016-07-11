@@ -34,6 +34,7 @@ module.exports = function(gulp, config) {
     var playScraper = require('google-play-scraper');
     var Download = require('download');
     var base64 = require('base64-js');
+    var worldCountries = require('world-countries');
 
     var projectConfig = requireDir(path.resolve(config.paths.app + '/resources/config'));
     var projectConfigDir = path.resolve(config.paths.tmp + '/resources/config');
@@ -218,6 +219,18 @@ module.exports = function(gulp, config) {
         return playScraperPromise;
     };
 
+    var orderCountries = function(countries) {
+        var orderedCountries = {};
+        var country;
+
+        for (var i in countries) {
+            country = countries[i];
+            orderedCountries[country.cca2] = country;
+        }
+
+        return orderedCountries;
+    };
+
     /**
      * Creates a new js snippet wich modify a param in app.common.config
      * Optionally, if the param to modify is an object you can extend it
@@ -264,11 +277,13 @@ module.exports = function(gulp, config) {
         js = js + 'window.app.common = window.app.common || {}; ';
         js = js + 'window.app.common.config = window.app.common.config || {}; ';
 
+        options.countries = orderCountries(worldCountries);
+
         // Set debug mode
         configLog.debug = (options.debug === 'true');
 
         // Add appName, version, clientType, compatibility, analyticsID
-        inmediateConfig = ['appName', 'version', 'clientType', 'compatibility', 'analyticsID'];
+        inmediateConfig = ['appName', 'version', 'clientType', 'compatibility', 'analyticsID', 'countries'];
 
         for (var i in inmediateConfig) {
             js = js + addToConfig(options, inmediateConfig[i]);

@@ -69,6 +69,7 @@
         "run-sequence": "1.1.1",
         "underscore": "1.8.3",
         "vulcanize": "1.14.5",
+        "world-countries": "v1.7.8",
         "yargs": "3.12.0"
     },
     "engines": {
