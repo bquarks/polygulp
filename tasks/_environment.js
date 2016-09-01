@@ -38,6 +38,7 @@ module.exports = function(gulp, config) {
 
     var projectConfig = requireDir(path.resolve(config.paths.app + '/resources/config'));
     var projectConfigDir = path.resolve(config.paths.tmp + '/resources/config');
+    var distFolder = path.resolve(config.paths.dist);
     var buildEnv;
 
     if (argv.environment) {
@@ -338,6 +339,38 @@ module.exports = function(gulp, config) {
         });
     };
 
+    /**
+     * Get versions specified in config file
+     * from bower.json files
+     * & backend version
+     * @return {[type]} [description]
+     */
+    var getVersions = function() {
+        var backendConfig = projectConfig.config.backend;
+        _.extend(backendConfig, _customUrl());
+        var project = requireDir(path.resolve(''));
+        var librariesToCheck = projectConfig.config.versions;
+        var library;
+        var bowerComponentLibraryFolder;
+
+        var versions = {
+            main: project.bower.version,
+            composr: {
+                urlBase: backendConfig.urlBase,
+                version: backendConfig.version,
+                domain: backendConfig.domain
+            }
+        };
+
+        for (var i in librariesToCheck) {
+            library = librariesToCheck[i];
+            bowerComponentLibraryFolder = requireDir(path.resolve('bower_components/' + library));
+            versions[library] = bowerComponentLibraryFolder.bower.version;
+
+        }
+        return JSON.stringify(versions);
+    };
+
     gulp.task('_environment', function() {
         if (!projectConfig.config) {
             configLog.error('No config.json provided');
@@ -354,7 +387,10 @@ module.exports = function(gulp, config) {
         // Adds or modify app namespace
         // Access to the custom config in app.common.config
         config.then(function(res) {
+            var versions = getVersions();
+
             fs.writeFile(projectConfigDir + '/config.js', res);
+            fs.writeFile(distFolder + '/versions.json', versions);
         });
 
     });
